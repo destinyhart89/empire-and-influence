@@ -1,0 +1,128 @@
+/*
+ * EMPIRE & INFLUENCE — Design System Variables
+ *
+ * Core theme: Dark navy + gold, vintage editorial aesthetic.
+ * Matches the established visual identity from the asset library.
+ *
+ * Architecture decision: CSS custom properties over SASS/LESS
+ * WHY: No build step, works natively in all modern browsers,
+ * supports runtime theme switching (e.g., era transitions).
+ * TRADEOFF: No nesting or mixins. Acceptable given the scope.
+ */
+
+:root {
+  /* ─── Core Palette (aligned to Phase 2 spec) ────────── */
+  --color-navy-900: #080E18;
+  --color-navy-800: #0F1A2E;
+  --color-navy-700: #162540;
+  --color-navy-600: #1E3A6E;
+  --color-navy-500: #2A4D8F;
+
+  --color-gold-500: #C9A84C;
+  --color-gold-400: #DAB44E;
+  --color-gold-300: #EAD292;
+  --color-gold-200: #F2E3B8;
+
+  --color-cream-100: #FAF5E8;
+  --color-cream-200: #F0E8D4;
+  --color-cream-300: #E2D6BC;
+
+  --color-red-500: #B84233;
+  --color-red-400: #D45A4A;
+  --color-green-500: #3A7D44;
+  --color-green-400: #4EA65C;
+  --color-amber-500: #C4922A;
+
+  /* ─── Semantic Colors ──────────────────────────────── */
+  --bg-primary: var(--color-navy-900);
+  --bg-secondary: var(--color-navy-800);
+  --bg-surface: var(--color-navy-700);
+  --bg-elevated: var(--color-navy-600);
+
+  --text-primary: var(--color-cream-100);
+  --text-secondary: var(--color-cream-300);
+  --text-muted: rgba(250, 245, 232, 0.5);
+
+  --accent-primary: var(--color-gold-500);
+  --accent-secondary: var(--color-gold-400);
+  --accent-hover: var(--color-gold-300);
+
+  --status-success: var(--color-green-400);
+  --status-danger: var(--color-red-400);
+  --status-warning: var(--color-amber-500);
+  --status-locked: rgba(250, 245, 232, 0.2);
+
+  /* ─── Meter Colors ─────────────────────────────────── */
+  --meter-economic: var(--color-gold-500);
+  --meter-stability: var(--color-green-500);
+  --meter-reputation: var(--color-navy-500);
+
+  /* ─── Typography ───────────────────────────────────── */
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Consolas', 'Courier New', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+
+  /* ─── Spacing ──────────────────────────────────────── */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* ─── Border & Radius ──────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --border-subtle: 1px solid rgba(212, 168, 67, 0.15);
+  --border-accent: 1px solid var(--accent-primary);
+  --border-gold-glow: 0 0 12px rgba(212, 168, 67, 0.3);
+
+  /* ─── Shadows ──────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(212, 168, 67, 0.2);
+
+  /* ─── Transitions ──────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* ─── Layout ───────────────────────────────────────── */
+  --content-max-width: 1200px;
+  --sidebar-width: 280px;
+  --header-height: 64px;
+  --meter-bar-height: 8px;
+}
+
+/* ─── Chromebook-Specific Overrides ────────────────────────
+   Chromebooks typically run at 1366×768 or 1920×1080.
+   Ensure comfortable reading and touch targets.            */
+
+@media (max-width: 1400px) {
+  :root {
+    --text-base: 0.9375rem;
+    --space-lg: 1.25rem;
+    --space-xl: 1.75rem;
+  }
+}
+
+@media (max-height: 800px) {
+  :root {
+    --header-height: 52px;
+    --space-2xl: 2rem;
+  }
+}

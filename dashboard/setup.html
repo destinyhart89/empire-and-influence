@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Class — Empire &amp; Influence Teacher Dashboard</title>
+<link rel="stylesheet" href="css/dashboard.css">
+<style>
+.setup-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.step-panel { display: none; }
+.step-panel.active { display: block; animation: fadeIn 0.25s ease; }
+
+/* Lesson toggles */
+.lesson-toggles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.lesson-toggle {
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+  user-select: none;
+}
+.lesson-toggle:hover { border-color: var(--primary); }
+.lesson-toggle.selected { border-color: var(--primary); background: var(--secondary); }
+.lesson-toggle .lesson-num { font-size: 18px; font-weight: 900; color: var(--primary); }
+.lesson-toggle .lesson-lbl { font-size: 9px; color: var(--text-muted); line-height: 1.2; margin-top: 2px; }
+.lesson-toggle.selected .lesson-lbl { color: var(--primary-dark); }
+
+/* Student list preview */
+.student-preview {
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-top: 10px;
+}
+.student-preview li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.student-preview li:last-child { border-bottom: none; }
+.student-preview li .creds { font-family: monospace; color: var(--primary); font-size: 11px; }
+.student-preview li button { background: none; border: none; cursor: pointer; color: var(--danger); font-size: 13px; padding: 0 4px; }
+
+/* Login cards for print */
+@media print {
+  .app-header, .setup-container > *:not(#print-cards) { display: none !important; }
+  #print-cards { display: block !important; }
+}
+#print-cards { display: none; }
+.print-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.print-card {
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  page-break-inside: avoid;
+}
+.print-card-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.print-card-class { font-size: 10px; color: #666; margin-bottom: 6px; }
+.print-card-creds { background: #f5f5f5; border-radius: 4px; padding: 6px; }
+.print-cred-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px; }
+.print-cred-row:last-child { margin-bottom: 0; }
+.print-cred-val { font-weight: 700; color: #1565C0; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-left">
+    <div class="app-logo">🌎 Empire &amp; Influence <span class="logo-tag">Teacher</span></div>
+  </div>
+  <div class="header-right">
+    <a href="index.html" class="btn btn-ghost btn-sm">← Back to Dashboard</a>
+  </div>
+</header>
+
+<div class="setup-container">
+  <div class="page-header" style="margin-bottom:32px;">
+    <div class="page-header-left">
+      <h1>Create a New Class</h1>
+      <p>Set up your class in 4 steps. Students will use the class code to link their game progress to your dashboard.</p>
+    </div>
+  </div>
+
+  <!-- Wizard Steps -->
+  <div class="wizard-steps" id="wizard-steps">
+    <div class="wiz-step active" id="wiz1"><div class="wiz-num">1</div><div class="wiz-label">Class Info</div></div>
+    <div class="wiz-step" id="wiz2"><div class="wiz-num">2</div><div class="wiz-label">Add Students</div></div>
+    <div class="wiz-step" id="wiz3"><div class="wiz-num">3</div><div class="wiz-label">Credentials</div></div>
+    <div class="wiz-step" id="wiz4"><div class="wiz-num">4</div><div class="wiz-label">Confirm</div></div>
+  </div>
+
+  <!-- ─── Step 1: Class Info ─────────────────────────────── -->
+  <div class="step-panel active" id="step-1">
+    <div class="card">
+      <div class="card-header"><span class="card-title">📋 Class Details</span></div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Class Name <span style="color:var(--danger)">*</span></label>
+            <input type="text" class="form-input" id="cls-name" placeholder="e.g., APUSH Period 3" maxlength="80" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Grade Level</label>
+            <select class="form-select" id="cls-grade">
+              <option value="10">10th Grade</option>
+              <option value="11" selected>11th Grade</option>
+              <option value="12">12th Grade</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Period / Section</label>
+            <input type="text" class="form-input" id="cls-period" placeholder="e.g., 2 or A-Block">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Class Start Date</label>
+            <input type="date" class="form-input" id="cls-start">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pacing Mode</label>
+          <select class="form-select" id="cls-pacing">
+            <option value="standard">Standard — 1 lesson per week</option>
+            <option value="accelerated">Accelerated — 2 lessons per week</option>
+            <option value="block">Block Schedule — 1 lesson per class day</option>
+            <option value="custom">Custom</option>
+          </select>
+          <div class="form-hint">This helps you track whether students are on schedule.</div>
+        </div>
+
+        <div class="section-label" style="margin-top:20px;">Assigned Lessons</div>
+        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">Select which lessons this class will complete. All 8 is typical for a full unit.</p>
+        <div class="lesson-toggles" id="lesson-toggles">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+      <div class="card-footer">
+        <div></div>
+        <button class="btn btn-primary" onclick="nextStep(1)">Next: Add Students →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Step 2: Add Students ───────────────────────────── -->
+  <div class="step-panel" id="step-2">
+    <div class="card">
+      <div class="card-header"><span class="card-title">👥 Add Students</span></div>
+      <div class="card-body">
+        <div class="alert alert-info">
+          <span>💡</span>
+          <span>Add students now to auto-generate login credentials, or add them later. Students can also create their own accounts using the class code.</span>
+        </div>
+
+        <div style="display:flex;gap:16px;margin-bottom:16px;">
+          <button class="btn btn-secondary" onclick="setAddMode('bulk'); return false;" id="mode-bulk-btn">📋 Paste Roster</button>
+          <button class="btn btn-ghost"     onclick="setAddMode('manual'); return false;" id="mode-manual-btn">+ Add One at a Time</button>
+        </div>
+
+        <!-- Bulk mode -->
+        <div id="bulk-mode">
+          <div class="form-group">
+            <label class="form-label">Paste Student Names (one per line)</label>
+            <textarea class="form-textarea" id="bulk-names" placeholder="Aisha Johnson&#10;Brandon Lee&#10;Carlos Mendez&#10;..." rows="8"></textarea>
+            <div class="form-hint">Copy/paste from your gradebook. First and last name on each line.</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="addBulkStudents()">Add These Students</button>
+        </div>
+
+        <!-- Manual mode -->
+        <div id="manual-mode" style="display:none;">
+          <div class="form-row" style="align-items:flex-end;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label">Student Name</label>
+              <input type="text" class="form-input" id="manual-name" placeholder="First Last" onkeydown="if(event.key==='Enter') addManualStudent()">
+            </div>
+            <button class="btn btn-primary" onclick="addManualStudent()">Add</button>
+          </div>
+        </div>
+
+        <!-- Student List -->
+        <div id="student-list-area" style="display:none;margin-top:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <div class="section-label" style="margin-bottom:0;">Students Added (<span id="student-count">0</span>)</div>
+            <button class="btn btn-ghost btn-sm" onclick="clearStudents()">Clear All</button>
+          </div>
+          <ul class="student-preview" id="student-list"></ul>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-ghost" onclick="prevStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">Next: Generate Credentials →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Step 3: Credentials ───────────────────────────── -->
+  <div class="step-panel" id="step-3">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🔑 Auto-Generated Login Credentials</span>
+        <button class="card-action-btn" onclick="regenerateCredentials()">↺ Regenerate All</button>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-success">
+          <span>✓</span>
+          <span>Credentials have been auto-generated. Students use these to log in to Empire &amp; Influence. Each student will also need the class code.</span>
+        </div>
+        <div class="class-code-big" id="step3-code">—</div>
+        <p style="text-align:center;font-size:12px;color:var(--text-secondary);margin-bottom:16px;">This is your class code. Share it with students at the start of the unit.</p>
+        <div class="login-cards-grid" id="creds-preview"></div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-ghost" onclick="prevStep(3)">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep(3)">Next: Confirm →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Step 4: Confirm ──────────────────────────────── -->
+  <div class="step-panel" id="step-4">
+    <div class="card">
+      <div class="card-header"><span class="card-title">✅ Class Created!</span></div>
+      <div class="card-body">
+        <div id="confirm-summary"></div>
+        <div class="class-code-big" id="step4-code">—</div>
+        <p style="text-align:center;font-size:12px;color:var(--text-secondary);margin-bottom:20px;">Share this code with your students. They'll enter it when they start the game.</p>
+
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
+          <button class="btn btn-primary btn-lg" onclick="printLoginCards()">🖨 Print Login Cards</button>
+          <a id="go-to-class-btn" href="#" class="btn btn-secondary btn-lg">View Class Dashboard →</a>
+        </div>
+
+        <div class="alert alert-info">
+          <span>📋</span>
+          <span><strong>What to tell students:</strong><br>
+          1. Open Empire &amp; Influence<br>
+          2. Enter the class code: <strong id="inline-code">—</strong><br>
+          3. Enter your username and password from your login card<br>
+          4. Play all assigned lessons<br>
+          5. When finished, click "Share with Teacher" to export your data</span>
+        </div>
+
+        <div class="section-label">Login Cards Preview</div>
+        <div class="login-cards-grid" id="confirm-cards"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Print area (hidden) -->
+<div id="print-cards">
+  <h2 style="margin-bottom:12px;">Empire &amp; Influence Login Cards</h2>
+  <div class="print-card-grid" id="print-card-grid"></div>
+</div>
+
+<script type="module">
+import { createClass, addStudentsBulk, addStudent, getStudents, LESSONS } from './js/core.js';
+
+// ─── State ──────────────────────────────────────────────────────
+
+let currentStep     = 1;
+let tempStudents    = []; // [{ name, username, password }] — before saving to DB
+let selectedLessons = [1,2,3,4,5,6,7,8];
+let createdClassId  = null;
+let createdClass    = null;
+
+// ─── Init ──────────────────────────────────────────────────────────
+
+document.getElementById('cls-start').value = new Date().toISOString().split('T')[0];
+renderLessonToggles();
+
+// ─── Lesson Toggles ────────────────────────────────────────────────
+
+function renderLessonToggles() {
+  const container = document.getElementById('lesson-toggles');
+  container.innerHTML = LESSONS.map(l => `
+    <div class="lesson-toggle selected" id="lt-${l.id}" onclick="toggleLesson(${l.id})">
+      <div class="lesson-num">L${l.id}</div>
+      <div class="lesson-lbl">${esc(l.title.split(' ').slice(0,2).join(' '))}</div>
+    </div>`).join('');
+}
+
+window.toggleLesson = function(id) {
+  const el  = document.getElementById(`lt-${id}`);
+  const idx = selectedLessons.indexOf(id);
+  if (idx >= 0) { selectedLessons.splice(idx, 1); el.classList.remove('selected'); }
+  else          { selectedLessons.push(id); selectedLessons.sort((a,b)=>a-b); el.classList.add('selected'); }
+};
+
+// ─── Step Navigation ───────────────────────────────────────────────
+
+window.nextStep = function(from) {
+  if (from === 1) {
+    if (!document.getElementById('cls-name').value.trim()) { alert('Please enter a class name.'); return; }
+    if (!selectedLessons.length) { alert('Please select at least one lesson.'); return; }
+  }
+  if (from === 2) {
+    // Save class + students now
+    if (!createdClassId) {
+      createdClass = createClass({
+        name:            document.getElementById('cls-name').value.trim(),
+        grade:           document.getElementById('cls-grade').value,
+        period:          document.getElementById('cls-period').value.trim(),
+        pacingMode:      document.getElementById('cls-pacing').value,
+        startDate:       document.getElementById('cls-start').value,
+        assignedLessons: selectedLessons,
+      });
+      createdClassId = createdClass.id;
+      if (tempStudents.length) {
+        addStudentsBulk(createdClassId, tempStudents.map(s => s.name));
+      }
+    }
+    document.getElementById('step3-code').textContent = createdClass.code;
+    renderCredsPreview();
+  }
+  if (from === 3) {
+    renderConfirm();
+  }
+  goToStep(from + 1);
+};
+
+window.prevStep = function(from) { goToStep(from - 1); };
+
+function goToStep(step) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`step-${step}`).classList.add('active');
+
+  document.querySelectorAll('.wiz-step').forEach((el, i) => {
+    el.classList.remove('active');
+    if (i + 1 < step)  el.classList.add('done');
+    if (i + 1 === step) el.classList.add('active');
+  });
+  currentStep = step;
+  window.scrollTo(0, 0);
+}
+
+// ─── Student Management (Pre-save) ─────────────────────────────────
+
+window.setAddMode = function(mode) {
+  document.getElementById('bulk-mode').style.display   = mode === 'bulk'   ? 'block' : 'none';
+  document.getElementById('manual-mode').style.display = mode === 'manual' ? 'block' : 'none';
+  document.getElementById('mode-bulk-btn').className   = 'btn ' + (mode === 'bulk'   ? 'btn-secondary' : 'btn-ghost');
+  document.getElementById('mode-manual-btn').className = 'btn ' + (mode === 'manual' ? 'btn-secondary' : 'btn-ghost');
+};
+
+window.addBulkStudents = function() {
+  const raw = document.getElementById('bulk-names').value.trim();
+  if (!raw) { alert('Please paste student names first.'); return; }
+  const names = raw.split('\n').map(n => n.trim()).filter(Boolean);
+  names.forEach(name => {
+    if (!tempStudents.find(s => s.name.toLowerCase() === name.toLowerCase())) {
+      tempStudents.push({ name, username: genUsername(name, tempStudents), password: genPassword() });
+    }
+  });
+  document.getElementById('bulk-names').value = '';
+  renderStudentList();
+};
+
+window.addManualStudent = function() {
+  const inp  = document.getElementById('manual-name');
+  const name = inp.value.trim();
+  if (!name) { alert('Enter a student name.'); return; }
+  if (tempStudents.find(s => s.name.toLowerCase() === name.toLowerCase())) { alert(`${name} is already in the list.`); return; }
+  tempStudents.push({ name, username: genUsername(name, tempStudents), password: genPassword() });
+  inp.value = '';
+  renderStudentList();
+  inp.focus();
+};
+
+window.removeStudent = function(name) {
+  tempStudents = tempStudents.filter(s => s.name !== name);
+  renderStudentList();
+};
+
+window.clearStudents = function() {
+  if (confirm('Remove all students?')) { tempStudents = []; renderStudentList(); }
+};
+
+function renderStudentList() {
+  const area = document.getElementById('student-list-area');
+  const list = document.getElementById('student-list');
+  document.getElementById('student-count').textContent = tempStudents.length;
+
+  if (!tempStudents.length) { area.style.display = 'none'; return; }
+  area.style.display = 'block';
+  list.innerHTML = tempStudents.map(s => `
+    <li>
+      <span>${esc(s.name)}</span>
+      <span class="creds">${esc(s.username)} / ${esc(s.password)}</span>
+      <button onclick="removeStudent('${esc(s.name)}')" title="Remove">✕</button>
+    </li>`).join('');
+}
+
+// ─── Credentials Preview ────────────────────────────────────────────
+
+function renderCredsPreview() {
+  const students = createdClassId ? getStudents(createdClassId) : tempStudents;
+  const el = document.getElementById('creds-preview');
+  if (!students.length) { el.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">No students added — you can add them later from the class dashboard.</p>'; return; }
+  el.innerHTML = students.map(s => `
+    <div class="login-card">
+      <div class="login-card-name">${esc(s.name)}</div>
+      <div class="login-card-class">${esc(createdClass?.name || '')} · Code: <strong>${esc(createdClass?.code || '')}</strong></div>
+      <div class="login-card-creds">
+        <div class="cred-row"><span class="cred-key">Username</span><span class="cred-val">${esc(s.username)}</span></div>
+        <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val">${esc(s.password)}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+window.regenerateCredentials = function() {
+  alert('To reset all passwords, delete the class and recreate it. Individual passwords can be changed from the class roster.');
+};
+
+// ─── Confirm + Login Cards ──────────────────────────────────────────
+
+function renderConfirm() {
+  const students = createdClassId ? getStudents(createdClassId) : [];
+  document.getElementById('step4-code').textContent   = createdClass?.code || '—';
+  document.getElementById('inline-code').textContent  = createdClass?.code || '—';
+  document.getElementById('go-to-class-btn').href     = `index.html`;
+
+  document.getElementById('confirm-summary').innerHTML = `
+    <div class="alert alert-success" style="margin-bottom:16px;">
+      <span>✅</span>
+      <span>
+        <strong>${esc(createdClass?.name || '')}</strong> has been created!<br>
+        ${students.length} student account(s) · ${selectedLessons.length} lessons assigned · Started ${esc(createdClass?.startDate || '')}
+      </span>
+    </div>`;
+
+  // Login cards in confirm step
+  const cardsEl = document.getElementById('confirm-cards');
+  cardsEl.innerHTML = students.map(s => `
+    <div class="login-card">
+      <div class="login-card-name">${esc(s.name)}</div>
+      <div class="login-card-class">${esc(createdClass?.name || '')} · <strong>${esc(createdClass?.code || '')}</strong></div>
+      <div class="login-card-creds">
+        <div class="cred-row"><span class="cred-key">Username</span><span class="cred-val">${esc(s.username)}</span></div>
+        <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val">${esc(s.password)}</span></div>
+      </div>
+    </div>`).join('');
+
+  // Build print cards
+  const printGrid = document.getElementById('print-card-grid');
+  printGrid.innerHTML = students.map(s => `
+    <div class="print-card">
+      <div class="print-card-name">${esc(s.name)}</div>
+      <div class="print-card-class">Class: ${esc(createdClass?.name || '')} &nbsp;|&nbsp; Code: <strong>${esc(createdClass?.code || '')}</strong></div>
+      <div class="print-card-creds">
+        <div class="print-cred-row"><span>Username:</span><span class="print-cred-val">${esc(s.username)}</span></div>
+        <div class="print-cred-row"><span>Password:</span><span class="print-cred-val">${esc(s.password)}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+window.printLoginCards = function() {
+  document.getElementById('print-cards').style.display = 'block';
+  window.print();
+  setTimeout(() => { document.getElementById('print-cards').style.display = 'none'; }, 500);
+};
+
+// ─── Utilities ─────────────────────────────────────────────────────
+
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function genUsername(name, existing) {
+  const parts = name.trim().toLowerCase().split(/\s+/);
+  const base  = (parts[0] + (parts[1]?.[0] || '')).replace(/[^a-z0-9]/g, '').slice(0, 12);
+  const taken = new Set(existing.map(s => s.username));
+  let candidate = base || 'student';
+  let n = 1;
+  while (taken.has(candidate)) { candidate = base + (++n); }
+  return candidate;
+}
+
+function genPassword() {
+  const w = ['maple','river','cloud','storm','frost','eagle','tiger','ocean','brave','swift'];
+  return w[Math.floor(Math.random() * w.length)] + Math.floor(100 + Math.random() * 900);
+}
+</script>
+</body>
+</html>

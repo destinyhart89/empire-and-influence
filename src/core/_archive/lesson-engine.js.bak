@@ -1,0 +1,308 @@
+/**
+ * EMPIRE & INFLUENCE — Lesson Engine
+ *
+ * Interprets lesson data files and drives the gameplay loop.
+ * Lessons are defined as JSON data; this engine renders them.
+ *
+ * Architecture decision: Data-driven lesson definitions
+ * WHY: Decouples content from code. Each lesson is a JSON file defining
+ * screens, decisions, events, and consequences. The engine interprets
+ * the data — meaning adding/editing lessons requires zero code changes.
+ * This is critical for a teacher who may iterate on curriculum.
+ * TRADEOFF: Slightly more complex JSON schema. Worth it for maintainability.
+ *
+ * Phase 1 scope: Engine skeleton + schema definition.
+ * Full implementation in Phase 2.
+ */
+
+import { store, initLesson, recordDecision, updateMeters, setFlag, completeLesson, getMeters } from './store.js';
+
+// ─── Lesson Data Schema (reference) ────────────────────────
+//
+// A lesson JSON file should conform to:
+//
+// {
+//   id: 1,
+//   title: "The Cuba Crisis",
+//   subtitle: "1895–1902",
+//   htmlFile: "Lesson1_Cuba.html",       // legacy reference
+//   era: "early-imperial",               // LUT class: "early-imperial" | "cold-war" | "base"
+//   advisors: {
+//     economic:   { name, title, portrait, quotes: [] },
+//     security:   { name, title, portrait, quotes: [] },
+//     diplomatic: { name, title, portrait, quotes: [] },
+//   },
+//   screens: [
+//     {
+//       id: "opening",
+//       type: "narrative",                // "narrative" | "decision" | "event" | "outcome" | "reflection" | "assessment"
+//       title: "...",
+//       text: "...",
+//       map: { asset, hotspots: [...], animation },
+//       newspaper: { asset, trigger, perspective },
+//       advisorPrimary: "economic",
+//       advisorDialogue: { economic: "...", security: "...", diplomatic: "..." },
+//       next: "decision_1",              // static next, OR
+//       choices: null,                   // for decision screens
+//     },
+//     {
+//       id: "decision_1",
+//       type: "decision",
+//       title: "...",
+//       text: "...",
+//       choices: [
+//         {
+//           id: "intervene",
+//           label: "Military Intervention",
+//           advisorAlignment: "security",
+//           meterEffects: { economic: +15, stability: -15, reputation: -5 },
+//           flags: { "chose_military_l1": true },
+//           next: "intervention_outcome",
+//           newspaper: { asset, perspective },
+//         },
+//         {
+//           id: "diplomacy",
+//           label: "Diplomatic Approach",
+//           advisorAlignment: "diplomatic",
+//           meterEffects: { economic: -5, stability: +5, reputation: +10 },
+//           flags: { "chose_diplomacy_l1": true },
+//           next: "diplomacy_outcome",
+//         },
+//       ],
+//     },
+//     ...
+//   ],
+//   events: [
+//     { id, trigger, card, meterEffects, advisorPrimary, uiBehavior },
+//   ],
+//   assessment: {
+//     questions: [
+//       { id, type: "multiple_choice", prompt, options: [], correctIndex, explanation, apStandard },
+//     ],
+//   },
+// }
+
+// ─── Engine State ───────────────────────────────────────────
+
+let currentLesson = null;
+let currentScreenId = null;
+let screenHistory = [];
+let renderTarget = null;
+
+// ─── Public API ─────────────────────────────────────────────
+
+/**
+ * Load a lesson data object and begin rendering.
+ * @param {Object} lessonData — parsed lesson JSON
+ * @param {HTMLElement} container — where to render
+ */
+export function startLesson(lessonData, container) {
+  currentLesson = lessonData;
+  renderTarget = container;
+  screenHistory = [];
+
+  initLesson(lessonData.id);
+
+  const firstScreen = lessonData.screens[0];
+  navigateToScreen(firstScreen.id);
+}
+
+/**
+ * Navigate to a specific screen within the current lesson.
+ */
+export function navigateToScreen(screenId) {
+  if (!currentLesson) return;
+
+  const screen = currentLesson.screens.find(s => s.id === screenId);
+  if (!screen) {
+    console.error(`[LessonEngine] Screen not found: ${screenId}`);
+    return;
+  }
+
+  currentScreenId = screenId;
+  screenHistory.push(screenId);
+
+  // Update store
+  store.setState(s => ({
+    lessons: {
+      ...s.lessons,
+      [currentLesson.id]: {
+        ...s.lessons[currentLesson.id],
+        currentScreen: screenId,
+      }
+    }
+  }));
+
+  renderScreen(screen);
+}
+
+/**
+ * Process a player's decision choice.
+ */
+export function makeChoice(screenId, choiceId) {
+  const screen = currentLesson.screens.find(s => s.id === screenId);
+  if (!screen || screen.type !== 'decision') return;
+
+  const choice = screen.choices.find(c => c.id === choiceId);
+  if (!choice) return;
+
+  // Record the decision
+  recordDecision(currentLesson.id, {
+    screenId,
+    choiceId,
+    label: choice.label,
+    advisorAlignment: choice.advisorAlignment,
+  });
+
+  // Apply meter effects
+  if (choice.meterEffects) {
+    updateMeters(choice.meterEffects);
+  }
+
+  // Set flags
+  if (choice.flags) {
+    Object.entries(choice.flags).forEach(([k, v]) => setFlag(k, v));
+  }
+
+  // Update advisor affinity
+  if (choice.advisorAlignment) {
+    store.setState(s => ({
+      advisorAffinity: {
+        ...s.advisorAffinity,
+        [choice.advisorAlignment]: s.advisorAffinity[choice.advisorAlignment] + 1,
+      }
+    }));
+  }
+
+  // Navigate to next screen
+  if (choice.next) {
+    navigateToScreen(choice.next);
+  }
+}
+
+/**
+ * Get current lesson metadata.
+ */
+export function getCurrentLesson() {
+  return currentLesson;
+}
+
+/**
+ * Get current screen.
+ */
+export function getCurrentScreen() {
+  if (!currentLesson) return null;
+  return currentLesson.screens.find(s => s.id === currentScreenId);
+}
+
+/**
+ * End the current lesson.
+ */
+export function endLesson() {
+  if (currentLesson) {
+    completeLesson(currentLesson.id);
+  }
+  currentLesson = null;
+  currentScreenId = null;
+  screenHistory = [];
+}
+
+// ─── Rendering (Phase 1 Skeleton) ───────────────────────────
+
+function renderScreen(screen) {
+  if (!renderTarget) return;
+
+  // Phase 1: Basic rendering skeleton.
+  // Phase 2 will build full component renderers for each screen type.
+  renderTarget.innerHTML = '';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = `screen screen--${screen.type} era--${currentLesson.era}`;
+  wrapper.dataset.screenId = screen.id;
+
+  switch (screen.type) {
+    case 'narrative':
+      renderNarrativeScreen(wrapper, screen);
+      break;
+    case 'decision':
+      renderDecisionScreen(wrapper, screen);
+      break;
+    case 'outcome':
+      renderOutcomeScreen(wrapper, screen);
+      break;
+    case 'reflection':
+      renderReflectionScreen(wrapper, screen);
+      break;
+    case 'assessment':
+      renderAssessmentScreen(wrapper, screen);
+      break;
+    default:
+      wrapper.innerHTML = `<p>Unknown screen type: ${screen.type}</p>`;
+  }
+
+  renderTarget.appendChild(wrapper);
+}
+
+function renderNarrativeScreen(container, screen) {
+  container.innerHTML = `
+    <div class="screen__header">
+      <h2 class="screen__title">${screen.title || ''}</h2>
+    </div>
+    ${screen.map ? `<div class="asset-frame lut-base lut-${currentLesson.era}"><img src="${screen.map.asset}" alt="Lesson map" class="screen__map"></div>` : ''}
+    <div class="screen__body">
+      <p>${screen.text || ''}</p>
+    </div>
+    <div class="screen__advisors" id="advisor-panel"></div>
+    <div class="screen__nav">
+      <button class="btn btn--primary" data-action="next" data-next="${screen.next || ''}">Continue</button>
+    </div>
+  `;
+
+  container.querySelector('[data-action="next"]')?.addEventListener('click', () => {
+    if (screen.next) navigateToScreen(screen.next);
+  });
+}
+
+function renderDecisionScreen(container, screen) {
+  const choicesHtml = (screen.choices || []).map(c => `
+    <button class="btn btn--choice" data-choice="${c.id}">
+      <span class="btn__label">${c.label}</span>
+      ${c.advisorAlignment ? `<span class="btn__advisor">${c.advisorAlignment} advisor</span>` : ''}
+    </button>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="screen__header">
+      <h2 class="screen__title">${screen.title || ''}</h2>
+    </div>
+    <div class="screen__body">
+      <p>${screen.text || ''}</p>
+    </div>
+    <div class="screen__choices">${choicesHtml}</div>
+  `;
+
+  container.querySelectorAll('[data-choice]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      makeChoice(screen.id, btn.dataset.choice);
+    });
+  });
+}
+
+function renderOutcomeScreen(container, screen) {
+  renderNarrativeScreen(container, screen); // Reuse for now
+}
+
+function renderReflectionScreen(container, screen) {
+  renderNarrativeScreen(container, screen); // Reuse for now
+}
+
+function renderAssessmentScreen(container, screen) {
+  container.innerHTML = `
+    <div class="screen__header">
+      <h2 class="screen__title">Assessment</h2>
+    </div>
+    <div class="screen__body">
+      <p>Assessment engine placeholder — Phase 2</p>
+    </div>
+  `;
+}

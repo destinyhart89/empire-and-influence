@@ -1,0 +1,142 @@
+/**
+ * EMPIRE & INFLUENCE — Teacher Dashboard UI Shell
+ *
+ * Phase 2: Layout shell with placeholders.
+ * Full data logic deferred to Phase 3.
+ */
+
+import { store, isTeacher } from '../core/store.js';
+import { navigate } from '../core/router.js';
+import { renderLoadingState, renderEmptyState, renderNoDataState, showToast } from './ui-components.js';
+
+// ─── Main Dashboard Render ──────────────────────────────────
+
+export function renderTeacherDashboardV2(params, container) {
+  if (!isTeacher()) {
+    navigate('/');
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="teacher-shell">
+      <div class="teacher-shell__header">
+        <h1 class="teacher-shell__title">Teacher Dashboard</h1>
+        <div class="flex-row gap-sm">
+          <button class="btn btn--secondary" id="teacher-export">Export Data</button>
+          <button class="btn btn--secondary" id="teacher-logout">Log Out</button>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-row" id="kpi-row">
+        ${renderKpiCard('Total Students', '--', 'No data yet')}
+        ${renderKpiCard('Avg. Completion', '--', 'No data yet')}
+        ${renderKpiCard('Avg. Score', '--', 'No data yet')}
+        ${renderKpiCard('Active Now', '--', 'No data yet')}
+      </div>
+
+      <!-- Student List -->
+      <div class="student-list" id="student-list-panel">
+        <div class="student-list__header">
+          <span class="student-list__title">Students</span>
+          <div class="flex-row gap-sm">
+            <input type="text" class="form-input" id="student-search" placeholder="Search students..." style="height:36px; font-size:0.8125rem; width:200px;">
+          </div>
+        </div>
+        <div id="student-table-container">
+          ${renderStudentTablePlaceholder()}
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1.5rem;" id="charts-row">
+        <div class="chart-container">
+          <div class="chart-container__placeholder">
+            <p style="color:var(--ds-text-muted);">Decision Pattern Distribution</p>
+            <p style="font-size:0.6875rem; color:var(--ds-text-muted); margin-top:0.25rem;">Phase 3 — Chart will render here</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-container__placeholder">
+            <p style="color:var(--ds-text-muted);">Assessment Score Distribution</p>
+            <p style="font-size:0.6875rem; color:var(--ds-text-muted); margin-top:0.25rem;">Phase 3 — Chart will render here</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Performance Cards Row -->
+      <div style="margin-top:1.5rem;">
+        <h3 style="color:var(--ds-gold); font-family:var(--font-display); margin-bottom:0.75rem;">Lesson Performance</h3>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:1rem;" id="lesson-perf-cards">
+          ${[1,2,3,4,5,6,7,8].map(i => renderLessonPerfCardPlaceholder(i)).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Event handlers
+  container.querySelector('#teacher-logout').addEventListener('click', () => {
+    store.reset();
+    navigate('/');
+  });
+
+  container.querySelector('#teacher-export').addEventListener('click', () => {
+    const data = store.exportData();
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `empire_influence_export_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Data exported successfully', 'success');
+  });
+}
+
+// ─── Sub-components ─────────────────────────────────────────
+
+function renderKpiCard(label, value, trend) {
+  return `
+    <div class="kpi-card">
+      <div class="kpi-card__label">${label}</div>
+      <div class="kpi-card__value">${value}</div>
+      <div class="kpi-card__trend">${trend}</div>
+    </div>
+  `;
+}
+
+function renderStudentTablePlaceholder() {
+  return `
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Class Code</th>
+          <th>Lessons</th>
+          <th>Avg Score</th>
+          <th>Dominant Path</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="6">
+            <div class="state-nodata" style="padding:1.5rem;">
+              <div class="state-nodata__text">No student data available. Students will appear here once they begin playing.</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+
+function renderLessonPerfCardPlaceholder(lessonId) {
+  return `
+    <div class="kpi-card">
+      <div class="kpi-card__label">Lesson ${lessonId}</div>
+      <div class="kpi-card__value" style="font-size:1.25rem;">--</div>
+      <div class="kpi-card__trend" style="font-size:0.6875rem; color:var(--ds-text-muted);">No completions yet</div>
+    </div>
+  `;
+}
