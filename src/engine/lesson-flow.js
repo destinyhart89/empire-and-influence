@@ -74,7 +74,8 @@ export class LessonFlow {
     if (savedState && savedState.lessonId === lessonData.id) {
       // Re-entry from saved state
       this.gameState = savedState;
-      this.currentScreen = this._findScreen(savedState.currentScreenId);
+      // Fall back to first screen if saved screen ID no longer exists (version mismatch)
+      this.currentScreen = this._findScreen(savedState.currentScreenId) || lessonData.screens[0];
       this.screenHistory = savedState.screenHistory || [];
     } else {
       // Fresh start
