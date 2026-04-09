@@ -38,10 +38,11 @@ const REPUTATION_LEVELS = {
 // ─── State Factory ──────────────────────────────────────────
 
 export function createFactionState(overrides = {}) {
+  const o = overrides ?? {};  // guard against null (globalState.factions initialises as null)
   const state = {};
   for (const key of FACTION_KEYS) {
     state[key] = {
-      reputation: overrides[key]?.reputation ?? REPUTATION_DEFAULT,
+      reputation: o[key]?.reputation ?? REPUTATION_DEFAULT,
       history: [],  // { decisionId, delta, timestamp }
     };
   }
