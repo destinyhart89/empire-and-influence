@@ -224,6 +224,16 @@ export function evaluateConditionSet(conditions, gameState) {
 }
 
 /**
+ * Evaluate a flag condition against the flags map.
+ * @param {Object} condition - { type:'flag', key, value }
+ * @param {Object} flags - gameState.flags
+ * @returns {boolean}
+ */
+function evaluateFlagCondition(condition, flags) {
+  return !!(flags?.[condition.key]) === Boolean(condition.value);
+}
+
+/**
  * Evaluate a single condition.
  */
 export function evaluateCondition(condition, gameState) {
