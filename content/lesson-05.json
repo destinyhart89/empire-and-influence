@@ -1,0 +1,33 @@
+{
+  "version": "20260331",
+  "lessonId": 5,
+
+  "screens": {
+
+    "context_guatemala": {
+      "text": "<p>President Jacobo Árbenz won Guatemala's 1950 election by a wide margin. His agrarian reform, Decree 900, redistributes uncultivated land from large estates — targeting United Fruit Company above all others.</p><p>The United Fruit Company is not merely a corporation. Its board of directors includes former Secretary of State John Foster Dulles and his brother, CIA Director Allen Dulles. UFCO calls Árbenz a Communist. The CIA has prepared Operation PBSUCCESS: a covert program to arm, train, and insert a rebel force under Colonel Castillo Armas.</p><p>The plan: arm a rebel force in neighboring Honduras, conduct psychological warfare via CIA-run radio stations, provide air cover with U.S. pilots flying unmarked planes, and demoralize the Guatemalan military until Árbenz resigns.</p><p><strong>What the CIA briefing does not mention:</strong> Árbenz is not a Communist. He has proposed to compensate United Fruit for the expropriated land at its own declared tax value — the company inflated its value after the fact for the compensation claim.</p><p><strong>What the briefing doesn't say:</strong> Secretary of State John Foster Dulles was UFCO's former corporate lawyer. CIA Director Allen Dulles sat on UFCO's board. The land reform that Árbenz proposed — Decree 900, enacted in 1952 — expropriated idle UFCO lands (paying the company's own declared tax value as compensation). UFCO had declared that land was worth $627,000. When expropriated, UFCO suddenly claimed it was worth $16 million. Historians Stephen Schlesinger and Stephen Kinzer documented this in <em>Bitter Fruit</em> (1982): the operation to remove Árbenz cannot be separated from the Dulles brothers' personal and professional ties to United Fruit.</p>"
+    },
+
+    "consequence_1": {
+      "newspaper": {
+        "headline": "ARBENZ RESIGNS; GUATEMALAN PRESIDENT YIELDS TO REBEL PRESSURE",
+        "source": "New York Times, June 28, 1954",
+        "perspective": "U.S. mainstream press",
+        "bodyText": "President Jacobo Árbenz Guzmán has announced his resignation and surrender of power to a military junta. Rebel forces backed by the army of liberation have secured the capital. The ten-year Guatemalan democratic \"spring\" ends.",
+        "trigger": "immediate"
+      }
+    },
+
+    "consequence_2": {
+      "newspaper": {
+        "headline": "CHILEAN MILITARY OVERTHROWS ALLENDE; JUNTA IN CONTROL",
+        "source": "New York Times, September 12, 1973",
+        "perspective": "U.S. mainstream press",
+        "bodyText": "President Salvador Allende died today as the Chilean military seized power. The junta announced a \"state of siege.\" General Augusto Pinochet leads the new military government. Thousands are reported detained at the National Stadium.",
+        "trigger": "immediate"
+      }
+    }
+
+  }
+
+}

@@ -1,0 +1,320 @@
+/*
+ * EMPIRE & INFLUENCE — View-Specific Styles
+ */
+
+/* ─── Login Screen ───────────────────────────────────────── */
+
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - var(--header-height) - var(--space-xl) * 2);
+  gap: var(--space-2xl);
+}
+
+.login-screen__hero {
+  text-align: center;
+}
+
+.login-screen__title {
+  font-size: var(--text-4xl);
+  color: var(--accent-primary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.login-screen__subtitle {
+  font-size: var(--text-2xl);
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: var(--space-sm);
+}
+
+.login-screen__tagline {
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+  margin-top: var(--space-md);
+  max-width: 500px;
+}
+
+.login-screen__period {
+  margin-top: var(--space-sm);
+  font-size: var(--text-sm);
+}
+
+.login-screen__form {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.login-screen__submit {
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.login-screen__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.login-screen__divider::before,
+.login-screen__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.login-screen__credit {
+  font-size: var(--text-sm);
+}
+
+/* ─── Form Elements ──────────────────────────────────────── */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.form-group label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.form-input {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-primary);
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  min-height: 44px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.form-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(212, 168, 67, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* ─── Dashboard ──────────────────────────────────────────── */
+
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard__meters {
+  background: var(--bg-secondary);
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: var(--space-sm);
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: 3px;
+  transition: width var(--transition-slow);
+}
+
+/* ─── Lesson Grid ────────────────────────────────────────── */
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-lg);
+}
+
+.lesson-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.lesson-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lesson-card__number {
+  font-size: var(--text-sm);
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.lesson-card__title {
+  font-size: var(--text-xl);
+  color: var(--text-primary);
+}
+
+.lesson-card__subtitle {
+  font-size: var(--text-sm);
+}
+
+.lesson-card__desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.lesson-card__advisors {
+  font-size: var(--text-xs);
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+.lesson-card__era {
+  margin-top: var(--space-xs);
+}
+
+/* ─── Badges ─────────────────────────────────────────────── */
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge--success {
+  background: rgba(78, 166, 92, 0.2);
+  color: var(--status-success);
+}
+
+.badge--active {
+  background: rgba(212, 168, 67, 0.2);
+  color: var(--accent-primary);
+}
+
+.badge--locked {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.era-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  text-transform: capitalize;
+}
+
+.era-badge--early-imperial {
+  background: rgba(214, 184, 106, 0.15);
+  color: var(--color-gold-400);
+}
+
+.era-badge--cold-war {
+  background: rgba(120, 152, 190, 0.15);
+  color: #8AACC8;
+}
+
+.era-badge--base {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+/* ─── Lesson Player ──────────────────────────────────────── */
+
+.lesson-player__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.lesson-player__info {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.lesson-player__meters {
+  margin-bottom: var(--space-lg);
+}
+
+.lesson-placeholder {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-xl);
+}
+
+.lesson-placeholder__icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-md);
+}
+
+.advisor-preview {
+  margin-top: var(--space-xl);
+}
+
+.advisor-preview__list {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-xl);
+  margin-top: var(--space-md);
+}
+
+.advisor-preview__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: var(--text-sm);
+}
+
+.advisor-preview__role {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+/* ─── Teacher Dashboard ──────────────────────────────────── */
+
+.teacher-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xl);
+}
+
+.teacher-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}

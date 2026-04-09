@@ -1,0 +1,45 @@
+{
+  "version": "20260331",
+  "lessonId": 3,
+
+  "screens": {
+
+    "intro": {
+      "text": "<p>The year is 1910. The United Fruit Company controls more land in Guatemala than the Guatemalan government. It runs the only functioning railroad, the telegraph system, and the port at Puerto Barrios. In Honduras, it is the largest landowner, employer, and creditor — holding approximately 3.5 million acres across Central America, according to company records, while paying no export tax.</p><p>A writer named O. Henry had already named what this looked like. In his 1904 novel <em>Cabbages and Kings</em>, he coined the term \"banana republic\" — a small, unstable nation whose economy and government have been captured by a foreign fruit company. He meant it as satire. Central Americans recognized it as description.</p><p>American corporations weren't just operating in Central America; in many ways, they were replacing the state. The decisions you make about corporations, labor, and intervention will define American foreign policy's moral character for a generation.</p>"
+    },
+
+    "context_1": {
+      "text": "<p>The United Fruit Company, founded in 1899 through a merger of several banana operations, has become the prototype of corporate imperialism. In Guatemala, it controls:</p><p>— 42% of all arable land (most held idle to prevent competition)<br>— The only Atlantic railroad<br>— Puerto Barrios, the only Atlantic port<br>— The telegraph and radio network</p><p>In Honduras, UFCO and competitor Standard Fruit together control the banana export economy and have secured \"concession zones\" — areas where local labor law and tax codes don't apply to the companies.</p><p>The Guatemalan and Honduran governments are structurally dependent: UFCO's railroad concessions are so favorable that the government cannot build competing rail lines. Export taxes are zero. Land taxes are minimal. In exchange, UFCO promises investment, employment, and infrastructure.</p><p>The terms of UFCO's concessions were extraordinary. In Guatemala, the company paid no export taxes on bananas. It controlled the railroad at rates it set itself. It operated the telegraph. As historian Paul Chapman documented, when governments attempted to renegotiate these terms, UFCO responded with a combination of legal pressure, corporate lobbying in Washington, and — when necessary — the implicit threat of U.S. Marine intervention that had already been demonstrated across the region.</p><p>Now UFCO is requesting additional land concessions — another 250,000 acres — for \"future expansion.\"</p>",
+      "newspaper": {
+        "headline": "UNITED FRUIT COMPANY'S GREAT GROWTH; VAST SUMS INVESTED IN TROPICAL FRUIT",
+        "source": "Boston Globe, 1912",
+        "perspective": "U.S. financial press (Boston, UFCO's home city)",
+        "bodyText": "The United Fruit Company has expanded its Central American holdings dramatically, constructing railroads and port facilities valued in the tens of millions. Congressional testimony this year details the company's near-monopoly control of Guatemala's export economy.",
+        "trigger": "immediate"
+      }
+    },
+
+    "decision_3": {
+      "choices": {
+        "d3_support_coup": {
+          "consequenceText": "The expropriation triggers an immediate crisis. Within weeks, State Department cables are flying. UFCO lobbyists are in Washington. The Security Advisor is ready to move.</p><p>It will be another decade before a retired Marine General named Smedley Butler puts into words what is happening: \"I spent 33 years in active military service and during that period I spent most of my time as a high class muscle man for Big Business, for Wall Street and the bankers. In short, I was a racketeer, a gangster for capitalism. I helped make Honduras right for the American fruit companies in 1903.\" Butler will say he helped make Guatemala \"safe for United Fruit.\" He will call it what it was."
+        }
+      }
+    }
+
+  },
+
+  "advisors": {
+
+    "economic": {
+      "quotes": {
+        "decision_1": {
+          "default": "The United Fruit Company employs 20,000 people across Central America, operates the only functional railroads in Guatemala and Honduras, and controls the port facilities that connect these economies to the world. When we ask for land concessions, we're asking for the ability to continue that investment.",
+          "trusted": "These concessions were contracts signed in good faith — Minor Keith's own words in 1910, and he was right. We built the railroad. We built the port. We made these economies function. The concessions are the price of that investment. If Guatemala wants to renegotiate after thirty years of receiving the benefit, that's not good faith. That's extortion.",
+          "cold": "I'll give you the numbers: UFCO's banana exports generated $7 million in Guatemalan government revenues last year alone. That's 40% of their budget. The concessions aren't charity — they're the cost of doing business at scale."
+        }
+      }
+    }
+
+  }
+}

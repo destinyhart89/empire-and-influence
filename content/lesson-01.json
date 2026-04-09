@@ -1,0 +1,251 @@
+{
+  "lessonId": 1,
+  "version": "20260331",
+  "screens": {
+    "intro": {
+      "title": "The Cuba Crisis",
+      "subtitle": "1895–1902",
+      "text": "<p>The year is 1898. Cuba is fighting for independence from Spain. American sugar investments on the island exceed $50 million, and the newspapers are howling for war.</p><p>As a senior policy advisor to the President, you will shape America’s response to the crisis — and in doing so, set the course of U.S. foreign policy for the next century.</p><p>Three advisors will guide you. Each has their own agenda. Choose wisely.</p>",
+      "map": {
+        "caption": "Cuba and the Caribbean, 1898 — U.S. sugar investments and naval positions"
+      }
+    },
+    "context_1": {
+      "title": "Rising Tensions",
+      "text": "<p>Spain has ruled Cuba for nearly four centuries. Cuban rebels — led by figures like José Martí, who died fighting for independence in 1895 — had been at war since that year. Spain’s brutal reconcentration camps, designed to separate civilians from rebel fighters, drew international condemnation and killed tens of thousands of Cuban civilians.</p><p>In the United States, yellow journalism inflamed public opinion against Spain. Publishers like William Randolph Hearst and Joseph Pulitzer competed in sensationalism — presenting Spain as a monster and the United States as Cuba’s potential liberator.</p><p>On February 15, 1898, the USS Maine explodes in Havana Harbor, killing 266 American sailors. The naval court’s investigation is inconclusive about the cause. Hearst’s New York Journal has already decided — and the next morning’s headline says so.</p>",
+      "newspaper": {
+        "headline": "DESTRUCTION OF THE WAR SHIP MAINE WAS THE WORK OF AN ENEMY",
+        "source": "New York Journal, February 17, 1898",
+        "bodyText": "Assistant Secretary Roosevelt Convinced the Explosion of the War Ship Was Not an Accident. The Journal Offers $50,000 Reward for the Detection of the Perpetrator of the Maine Outrage! 266 American sailors dead. Spain must answer.",
+        "perspective": "Hearst Press — U.S. Interventionist"
+      },
+      "advisorDialogue": {
+        "economic": "Our sugar investments are at risk. Instability in Cuba threatens millions in American capital.",
+        "security": "The Maine demands a response. Our naval honor is at stake.",
+        "diplomatic": "José Martí warned that Cuba must be free not just from Spain, but from any nation that would replace Spain’s chains with its own. Before we rush to judgment on the Maine, let us remember whose liberation we are claiming to champion."
+      }
+    },
+    "decision_1": {
+      "title": "The Response",
+      "prompt": "The USS Maine has exploded in Havana Harbor. 266 American sailors are dead. Congress is demanding action. What course do you advise the President to take?",
+      "text": "Your advisors are divided. The nation watches.",
+      "choices": {
+        "d1_war": {
+          "label": "Declare War on Spain",
+          "description": "Rally Congress and the public behind military action. Send the Navy to liberate Cuba — and establish American power in the Caribbean.",
+          "consequenceText": "Congress votes overwhelmingly for war. The Teller Amendment passes alongside it — a promise that the United States will not annex Cuba. American forces mobilize rapidly.",
+          "advisorReactions": {
+            "economic": "War will disrupt trade in the short term, but the long-term opportunities are... considerable.",
+            "security": "Now we’re talking. The fleet is ready. Cuba will be free — and America will be dominant.",
+            "diplomatic": "God help us. We’ve just started down a road there’s no coming back from."
+          }
+        },
+        "d1_diplomacy": {
+          "label": "Pursue Diplomatic Channels",
+          "description": "Demand Spain grant Cuba autonomy through international negotiation. Avoid war while protecting American interests through pressure.",
+          "consequenceText": "The United States enters negotiations with Spain, demanding Cuban autonomy. Public opinion is divided — many see this as weakness, while others praise American restraint.",
+          "advisorReactions": {
+            "economic": "Diplomacy takes time we may not have. Our investments bleed while diplomats talk.",
+            "security": "Diplomacy? After the Maine? The world will see us as weak.",
+            "diplomatic": "Courage comes in many forms. This is the harder path, but the right one."
+          }
+        },
+        "d1_economic": {
+          "label": "Protect Economic Interests Only",
+          "description": "Deploy naval vessels to protect American sugar plantations and shipping routes, but avoid broader military commitment.",
+          "consequenceText": "The U.S. deploys naval assets to protect American commercial interests in Cuba. The public is confused — are we intervening or aren’t we? Cubans view American motives with suspicion.",
+          "advisorReactions": {
+            "economic": "Practical and profitable. Protect what matters, avoid what doesn’t.",
+            "security": "A half-measure. We protect sugar while ignoring our dead sailors?",
+            "diplomatic": "Transparent self-interest. The Cubans will see through this in an instant."
+          }
+        }
+      }
+    },
+    "consequence_1_war": {
+      "title": "The Splendid Little War",
+      "text": "<p>The Spanish-American War is short and decisive. In just 113 days, American forces — fighting alongside Cuban rebels who had been at war since 1895 — defeat Spain. Santiago falls. The Spanish fleet is destroyed in a single afternoon off the Cuban coast.</p><p>The Treaty of Paris gives the United States control of Cuba, Puerto Rico, Guam, and the Philippines. America is now an imperial power — acquiring more territory in one treaty than it had in the previous century.</p><p>But the Teller Amendment promised Cuban independence. And in Havana, the newspapers are already asking: did Cuba trade one colonial master for another?</p>",
+      "newspaper": {
+        "headline": "¡Yankis Invaden Nuestra Isla!",
+        "source": "La Voz de Cuba",
+        "perspective": "Cuban oppositional press"
+      }
+    },
+    "consequence_1_diplomacy": {
+      "title": "A Fragile Peace",
+      "text": "<p>Negotiations with Spain proceed slowly. Madrid agrees to limited Cuban autonomy, but rebel leaders reject the terms as insufficient. Fighting continues.</p><p>American newspapers attack the administration for weakness. “While diplomats dine, sailors rot in Havana Harbor,” writes Hearst.</p><p>Spain eventually concedes under pressure, granting Cuban self-governance — but American influence in the region remains limited compared to what a military victory might have achieved.</p>"
+    },
+    "consequence_1_economic": {
+      "title": "The Business of Empire",
+      "text": "<p>American warships patrol the waters around Cuba, protecting sugar shipments and American property. But the broader conflict continues.</p><p>Cuban rebels view the American “protection” as self-serving. Spain protests the naval presence. Congress demands a clearer policy.</p><p>Your economic-first approach has preserved American investments — but at the cost of clarity and moral authority.</p>"
+    },
+    "context_2": {
+      "title": "The Aftermath",
+      "text": "<p>The fighting is over, one way or another. Cuba is free from Spain — but the question of its relationship with the United States remains unresolved.</p><p>American troops occupy parts of the island. Cuban rebels, who fought alongside U.S. forces, expect full independence. Business interests expect continued access to sugar profits.</p><p>Your advisors have strong opinions about what comes next.</p>",
+      "advisorDialogue": {
+        "economic": "The sugar market is ours if we play this right. Cuba needs American capital to rebuild.",
+        "security": "We need a permanent military presence. Guantánamo Bay is the key to Caribbean security.",
+        "diplomatic": "We promised independence. The Teller Amendment isn’t a suggestion — it’s law."
+      }
+    },
+    "decision_2": {
+      "title": "Shaping Post-War Cuba",
+      "prompt": "The war is over. Cuba must rebuild. How should the United States structure its relationship with the newly independent nation?",
+      "choices": {
+        "d2_occupy": {
+          "label": "Maintain Military Occupation",
+          "description": "Keep American troops in Cuba to maintain order, rebuild infrastructure, and protect U.S. interests. Set conditions before granting independence.",
+          "consequenceText": "American military government takes control of Cuba. Infrastructure improves, but Cuban resentment grows. The Teller Amendment’s promise of independence feels increasingly hollow.",
+          "advisorReactions": {
+            "economic": "Occupation means stability, and stability means profits. I can work with this.",
+            "security": "Exactly right. We control the situation until we’re confident in the outcome.",
+            "diplomatic": "This is occupation, not liberation. We’ve become what we said we were fighting."
+          }
+        },
+        "d2_platt": {
+          "label": "Grant Limited Independence (Platt Amendment)",
+          "description": "Allow Cuban self-governance, but with conditions: the U.S. retains the right to intervene, lease naval bases, and approve foreign treaties.",
+          "consequenceText": "The Platt Amendment is imposed on Cuba’s new constitution. Cuba governs itself — on paper. In practice, the United States holds the strings. It’s a compromise that pleases investors and satisfies hawks, but plants seeds of deep resentment.",
+          "advisorReactions": {
+            "economic": "Brilliant. Legal authority to protect our investments, wrapped in the language of self-determination. The shareholders will love this.",
+            "security": "The naval base provision is acceptable. We keep Guantánamo. That’s what matters.",
+            "diplomatic": "Independence with conditions isn’t independence. But... it could have been worse."
+          }
+        },
+        "d2_full_independence": {
+          "label": "Grant Full Independence",
+          "description": "Honor the Teller Amendment completely. Withdraw American forces and let Cuba chart its own course.",
+          "consequenceText": "American forces withdraw from Cuba. The island celebrates its hard-won independence. But powerful interests in Washington and on Wall Street begin planning their next move. Freedom, they argue, is bad for business.",
+          "advisorReactions": {
+            "economic": "You’re handing away $50 million in investments on principle alone. History will not be kind to this decision.",
+            "security": "We’re abandoning a strategic position we won with American blood. This is a catastrophic error.",
+            "diplomatic": "This is what America should be. A nation that keeps its promises. The world is watching, and today they see something worth admiring."
+          }
+        },
+        "d2_negotiate": {
+          "label": "Negotiate a Partnership Treaty",
+          "description": "Work with Cuban leaders as equals to establish a mutual defense and trade agreement — no unilateral conditions.",
+          "lockMessage": "This option requires a diplomatic approach in the previous decision.",
+          "consequenceText": "The U.S. and Cuba sign a groundbreaking bilateral treaty — mutual defense, favorable trade terms, but no unilateral intervention rights. It’s slower and less profitable than the alternatives, but it creates genuine goodwill.",
+          "advisorReactions": {
+            "economic": "Interesting. Not what I’d choose, but I can find opportunities here.",
+            "security": "A partnership? With a nation we just helped free? We should be leading, not negotiating as equals.",
+            "diplomatic": "This is exactly right. True partnerships outlast occupations."
+          }
+        }
+      }
+    },
+    "consequence_2": {
+      "title": "The New Order",
+      "text": "<p>Your decisions are shaping a new American relationship with Latin America. The precedent you set in Cuba will echo through decades of U.S. foreign policy.</p><p>But one more question remains before this chapter closes.</p>"
+    },
+    "decision_3": {
+      "title": "Setting the Precedent",
+      "prompt": "As you prepare your final report to the President, you must frame the Cuba experience for future policy. What lesson should America take from Cuba?",
+      "choices": {
+        "d3_expand": {
+          "label": "\"Cuba Proves America’s Destiny as a World Power\"",
+          "description": "Frame the intervention as proof that the United States has the right and responsibility to project power globally.",
+          "consequenceText": "Your report frames Cuba as the dawn of an American century. Hawks in Congress cite it to justify expanded military budgets and further territorial ambitions. Historian Walter LaFeber would later argue that this moment — not a democratic impulse but an economic-strategic one — defined the true engine of American expansion. The era of Big Stick diplomacy has begun.",
+          "advisorReactions": {
+            "economic": "Empire and profit walk hand in hand. I like where this is going.",
+            "security": "This is what I’ve been saying from the start. We are the dominant power in this hemisphere.",
+            "diplomatic": "You’re writing a blank check for future interventions. One day, the bill will come due."
+          }
+        },
+        "d3_caution": {
+          "label": "\"Cuba Shows the Costs of Intervention\"",
+          "description": "Warn that military intervention, while sometimes necessary, carries deep costs and moral consequences.",
+          "consequenceText": "Your report acknowledges the success of the military campaign but warns of long-term consequences. Some in Washington call it prescient. Others call it weakness. History will take decades to decide.",
+          "advisorReactions": {
+            "economic": "Cautionary tales don’t build empires — or portfolios.",
+            "security": "Self-doubt is a luxury great powers cannot afford.",
+            "diplomatic": "If even one future president reads this and hesitates before sending troops, it will have been worth it."
+          }
+        },
+        "d3_economic_model": {
+          "label": "\"Cuba Demonstrates the Power of Economic Influence\"",
+          "description": "Argue that American commercial interests are the most effective tool of foreign policy — more durable than armies, more persuasive than diplomats.",
+          "consequenceText": "Your report frames economic engagement as America’s most powerful foreign policy tool. It will influence a generation of “dollar diplomacy” — where American banks and corporations become the vanguard of empire.",
+          "advisorReactions": {
+            "economic": "Perfect. Let commerce be our cannon and trade agreements our treaties. The returns are far better.",
+            "security": "Economic power has its uses. But it needs military power behind it to mean anything.",
+            "diplomatic": "At least it’s not explicitly militaristic. But economic control is still control."
+          }
+        }
+      }
+    },
+    "outcome": {
+      "title": "Lesson Complete: The Cuba Crisis",
+      "text": "<p>Your decisions have shaped America’s first major imperial adventure. The Spanish-American War transformed the United States from a continental power into a global one in 113 days.</p><p>The precedents you set — intervention or restraint, occupation or partnership, profit or principle — will echo through the next seven chapters of American foreign policy in Latin America. Cuba showed the world what the United States was willing to do. The next question was how far that willingness would extend.</p><p>Your advisors will remember your choices. Some will trust you more. Others, less. And the decisions you made here will create conditions — legal, military, and moral — that future lessons inherit.</p>"
+    }
+  },
+  "advisors": {
+    "economic": {
+      "name": "Industrial Investor",
+      "title": "Economic Advisor",
+      "quotes": {
+        "decision_1": {
+          "default": "Our sugar investments in Cuba exceed $50 million. We cannot allow instability to destroy American enterprise. Whatever course we take, our financial interests must be protected.",
+          "trusted": "Between us? The American Sugar Refining Company sent a telegram to the State Department in 1897 asking Washington to \"act to protect American property.\" They were right to ask. Our sugar operations cannot survive continued guerrilla warfare. We need stability — under any flag. That’s what this moment is really about."
+        },
+        "decision_2": "The spoils of war should include economic control. We have an opportunity to shape Cuba’s economy in America’s image — and profit handsomely in the process.",
+        "decision_3": "Consider this: the Platt Amendment gives us the legal framework to protect our investments indefinitely. The terms are favorable. Lock them in.",
+        "reaction_approve": [
+          "A sound investment in America’s future.",
+          "Now that is the kind of thinking that builds empires.",
+          "Excellent. Our shareholders will be pleased."
+        ],
+        "reaction_disapprove": [
+          "You’re leaving money on the table. Our investors won’t forget this.",
+          "This course jeopardizes everything we’ve built in Cuba.",
+          "Idealism is expensive. I hope you can afford it."
+        ],
+        "default": "Every decision has a price tag. Let’s make sure we’re on the right side of the ledger."
+      }
+    },
+    "security": {
+      "name": "Naval Strategy Officer",
+      "title": "Security Advisor",
+      "quotes": {
+        "decision_1": {
+          "default": "The destruction of the Maine cannot go unanswered. 266 American sailors are dead. Our naval forces are positioned and ready. This is the moment to establish American dominance in the Caribbean.",
+          "trusted": "Roosevelt wrote it clearly in an internal memo: control of Cuba means control of Caribbean shipping lanes and the future canal route. A hostile power in Havana is strategically intolerable. He was right. The Maine is our reason. Control is our objective."
+        },
+        "decision_2": "We’ve won the war in record time. Now we must consolidate. A military presence in Cuba ensures no European power — or local faction — can threaten our position.",
+        "decision_3": "Guantánamo Bay is strategically vital. A permanent naval base there gives us control over the Caribbean approaches. This is non-negotiable for national security.",
+        "reaction_approve": [
+          "Decisive action. That’s what wins wars.",
+          "Our forces stand ready to execute.",
+          "The military option is always the most honest one."
+        ],
+        "reaction_disapprove": [
+          "Weakness invites aggression. History will judge this harshly.",
+          "We’re surrendering strategic advantage for... what? Goodwill?",
+          "I’ve seen what happens when great powers hesitate. It’s never pretty."
+        ],
+        "default": "In matters of national security, hesitation is the enemy."
+      }
+    },
+    "diplomatic": {
+      "name": "Anti-Imperialist Senator",
+      "title": "Diplomatic Advisor",
+      "quotes": {
+        "decision_1": "We fought our own revolution to be free of empire. Will we now become the very thing we rebelled against? There are paths to influence that don’t require American boys dying in foreign harbors.",
+        "decision_2": "We promised Cuba liberty — the Teller Amendment says so explicitly. If we occupy Cuba now, we betray the very principles that justified this war.",
+        "decision_3": "The Platt Amendment is imperialism wearing a legal disguise. We can protect American interests without making Cuba a protectorate. True allies are more valuable than resentful subjects.",
+        "reaction_approve": [
+          "There may be hope for the Republic yet.",
+          "Restraint takes more courage than force. Well done.",
+          "This is the America the world should see."
+        ],
+        "reaction_disapprove": [
+          "We’re planting the seeds of resentment that will grow for a century.",
+          "Mark my words — this decision will haunt us.",
+          "The people of Cuba will remember this. And not fondly."
+        ],
+        "default": "The measure of a great nation is not what it can take, but what it chooses not to."
+      }
+    }
+  }
+}

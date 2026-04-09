@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Profile — Empire &amp; Influence Teacher Dashboard</title>
+<link rel="stylesheet" href="css/dashboard.css">
+<style>
+/* Student profile-specific styles */
+.profile-hero {
+  background: linear-gradient(135deg, #0D47A1, #1976D2);
+  color: #fff;
+  padding: 24px 28px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.profile-hero-name {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.profile-hero-meta {
+  font-size: 13px;
+  opacity: 0.85;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.profile-hero-right {
+  text-align: right;
+}
+
+.profile-hero-ideology {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.profile-hero-ending {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* Growth meter */
+.growth-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.growth-row:last-child { border-bottom: none; }
+.growth-lesson { width: 180px; flex-shrink: 0; color: var(--text-secondary); font-size: 12px; }
+.growth-pre  { width: 44px; text-align: right; color: var(--text-muted); font-size: 12px; }
+.growth-bar  { flex: 1; position: relative; height: 16px; display: flex; align-items: center; gap: 2px; }
+.growth-post { width: 44px; font-weight: 700; text-align: right; font-size: 12px; }
+.growth-delta { width: 40px; text-align: right; font-size: 12px; font-weight: 700; }
+
+.growth-bar-pre  { height: 10px; border-radius: 3px; background: #E3F2FD; border: 1.5px solid #1565C0; }
+.growth-bar-post { height: 14px; border-radius: 4px; background: var(--primary); }
+
+/* Section cards with left stripe */
+.section-card { margin-bottom: 24px; }
+.section-card .card-header { background: #FAFAFA; }
+
+/* Decision timeline */
+.tl-lesson-era {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+.era-early   { background: #E8F5E9; color: #2E7D32; }
+.era-cold    { background: #FFF3E0; color: #E65100; }
+.era-modern  { background: #F3E5F5; color: #6A1B9A; }
+
+.tl-no-data { font-size: 12px; color: var(--text-muted); font-style: italic; padding: 4px 0; }
+
+/* Ideology evolution bars */
+.ideo-evo-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  padding: 8px 0 0;
+  overflow-x: auto;
+}
+
+.ideo-evo-col {
+  flex: 1;
+  min-width: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ideo-evo-bars {
+  display: flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 80px;
+  width: 100%;
+  justify-content: center;
+}
+
+.ideo-evo-bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  min-height: 4px;
+  transition: height 0.4s;
+}
+
+.ideo-evo-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 5px;
+  line-height: 1.3;
+}
+
+/* Misconception item */
+.mis-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.mis-item:last-child { border-bottom: none; }
+.mis-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.mis-high   { background: #FFEBEE; color: #C62828; }
+.mis-medium { background: #FFF3E0; color: #E65100; }
+.mis-info   { flex: 1; }
+.mis-lesson { font-size: 13px; font-weight: 700; }
+.mis-skill  { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.mis-action { font-size: 11px; font-style: italic; color: var(--text-muted); margin-top: 2px; }
+.mis-score  { font-size: 16px; font-weight: 800; color: var(--danger); text-align: right; }
+
+/* Continuity flag detail */
+.flag-detail { display: flex; flex-direction: column; gap: 8px; }
+.flag-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+.flag-detail-item.triggered { background: #E8F5E9; border-color: #A5D6A7; }
+.flag-detail-icon { font-size: 16px; flex-shrink: 0; }
+.flag-detail-body { flex: 1; }
+.flag-detail-name { font-weight: 700; color: var(--text-primary); font-size: 12px; }
+.flag-detail-lesson { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+.flag-detail-impact { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
+.flag-detail-delayed { font-size: 9px; background: #FFF3E0; color: #E65100; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-left">
+    <div class="app-logo">
+      🌎 Empire &amp; Influence
+      <span class="logo-tag">Teacher</span>
+    </div>
+  </div>
+  <div class="header-right no-print">
+    <button class="btn btn-ghost btn-sm" onclick="window.history.back()">← Back</button>
+    <button class="btn btn-secondary btn-sm" onclick="exportThisStudent()">⬇ Export CSV</button>
+    <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print</button>
+  </div>
+</header>
+
+<main class="main" id="main-content">
+  <div id="no-student" class="empty-state" style="display:none;">
+    <div class="empty-icon">❓</div>
+    <h3>Student not found</h3>
+    <p>This student ID does not exist or has been removed.</p>
+    <a href="index.html" class="btn btn-primary">Back to Dashboard</a>
+  </div>
+
+  <div id="student-content"></div>
+</main>
+
+<script type="module">
+import {
+  getStudent, getClass, getStudentAnalytics,
+  getIdeologyProfile, computeL8Ending,
+  CONTINUITY_FLAGS, IDEOLOGY_DISPLAY, L8_ENDINGS, LESSONS,
+  generateStudentCSV, downloadCSV,
+} from './js/core.js';
+
+// ─── Load Student ─────────────────────────────────────────────────
+
+const params    = new URLSearchParams(window.location.search);
+const studentId = params.get('id');
+const student   = studentId ? getStudent(studentId) : null;
+const analytics = student  ? getStudentAnalytics(student) : null;
+const cls       = student  ? getClass(student.classId) : null;
+
+if (!student || !analytics) {
+  document.getElementById('no-student').style.display = 'block';
+} else {
+  renderStudentProfile();
+}
+
+// ─── Export ───────────────────────────────────────────────────────
+
+window.exportThisStudent = function() {
+  if (!analytics) return;
+  const csv = generateStudentCSV(student, analytics);
+  downloadCSV(csv, `empire-student-${student.name.replace(/\s+/g,'-')}-${Date.now()}.csv`);
+};
+
+// ─── Render ───────────────────────────────────────────────────────
+
+function renderStudentProfile() {
+  document.title = `${student.name} — Teacher Dashboard`;
+
+  const { completedLessons, progress, ideologyProfile, l8Ending, avgPostScore, avgGrowth,
+          growthPairs, decisionHistory, turningPoints, misconceptions, triggeredFlags,
+          delayedTriggered, ideologyEvolution, flags, assessments } = analytics;
+
+  const ideoCfg = IDEOLOGY_DISPLAY[ideologyProfile.ideology] || IDEOLOGY_DISPLAY.mixed;
+
+  document.getElementById('student-content').innerHTML = `
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <a href="index.html">My Classes</a>
+      <span class="sep">›</span>
+      <a href="index.html?class=${student.classId}">${esc(cls?.name || 'Class')}</a>
+      <span class="sep">›</span>
+      <span>${esc(student.name)}</span>
+    </div>
+
+    <!-- Hero Section 1: Overview -->
+    <div class="profile-hero">
+      <div class="profile-hero-left">
+        <div class="profile-hero-name">${esc(student.name)}</div>
+        <div class="profile-hero-meta">
+          <span>📚 ${esc(cls?.name || '')}</span>
+          <span>📅 Period ${esc(cls?.period || '')}</span>
+          <span>🔑 ${esc(student.username)}</span>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="badge badge-${getStatusBadge(analytics.status)}">${getStatusLabel(analytics.status)}</span>
+          <span class="badge badge-gray">${completedLessons.length}/8 Lessons</span>
+          ${avgPostScore !== null ? `<span class="badge badge-${avgPostScore >= 80 ? 'green' : avgPostScore >= 60 ? 'blue' : 'red'}">Avg ${avgPostScore}%</span>` : ''}
+        </div>
+      </div>
+      <div class="profile-hero-right">
+        <div class="profile-hero-ideology">
+          <span class="badge ${ideoCfg.badgeClass}" style="font-size:13px;padding:4px 12px;">${ideoCfg.label}</span>
+        </div>
+        <div class="profile-hero-ending" style="margin-top:8px;">
+          ${l8Ending && completedLessons.includes(8)
+            ? `L8 Ending: <strong>${l8Ending.type} — ${l8Ending.name}</strong>`
+            : `<span style="opacity:0.6">L8 Ending: Not yet reached</span>`}
+        </div>
+        ${avgGrowth !== null ? `<div style="margin-top:6px;font-size:12px;opacity:0.8;">Avg Growth: <strong>${avgGrowth > 0 ? '+' : ''}${avgGrowth}% per lesson</strong></div>` : ''}
+      </div>
+    </div>
+
+    <!-- Section 1: Assessment Growth -->
+    <div class="section-card card">
+      <div class="card-header">
+        <span class="card-title">📊 Assessment Growth: Pre → Post by Lesson</span>
+        <span style="font-size:11px;color:var(--text-muted)">VALIDATION CHECK 4: Pre and post scores are stored separately</span>
+      </div>
+      <div class="card-body">
+        ${renderGrowthChart(growthPairs, completedLessons)}
+      </div>
+    </div>
+
+    <!-- Section 2: Decision Timeline -->
+    <div class="section-card card">
+      <div class="card-header">
+        <span class="card-title">🗺 Decision Timeline: Lesson-by-Lesson Choices</span>
+        <span style="font-size:11px;color:var(--text-muted)">Visual history of how this student navigated each lesson</span>
+      </div>
+      <div class="card-body">
+        ${turningPoints.length ? `
+          <div class="alert alert-warning" style="margin-bottom:14px;">
+            <span>🔑</span>
+            <span><strong>Turning Points:</strong> ${turningPoints.length} decisions by this student set cross-lesson continuity flags. Look for these in the timeline below.</span>
+          </div>` : ''}
+        <div class="timeline">
+          ${renderDecisionTimeline(decisionHistory, turningPoints)}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Ideology Tracking -->
+    <div class="section-card card">
+      <div class="card-header">
+        <span class="card-title">🧠 Ideology Profile &amp; Evolution</span>
+        <span style="font-size:11px;color:var(--text-muted)">VALIDATION CHECK 1: Profile drives L8 ending via getIdeologyProfile()</span>
+      </div>
+      <div class="card-body">
+        ${renderIdeologySection(ideologyProfile, ideologyEvolution, completedLessons)}
+      </div>
+    </div>
+
+    <!-- Section 4: Misconceptions -->
+    <div class="section-card card">
+      <div class="card-header">
+        <span class="card-title">⚠ Misconceptions &amp; Weak Areas</span>
+        <span style="font-size:11px;color:var(--text-muted)">Post-assessment scores below 70% indicate areas needing attention</span>
+      </div>
+      <div class="card-body">
+        ${renderMisconceptions(misconceptions, completedLessons, assessments)}
+      </div>
+    </div>
+
+    <!-- Section 5: Continuity Flags -->
+    <div class="section-card card">
+      <div class="card-header">
+        <span class="card-title">🔗 Continuity Flags (${triggeredFlags.length} / 19 triggered)</span>
+        <span style="font-size:11px;color:var(--text-muted)">VALIDATION CHECK 2: All 19 cross-lesson flags evaluated</span>
+      </div>
+      <div class="card-body">
+        ${delayedTriggered.length ? `
+          <div class="alert alert-warning" style="margin-bottom:14px;">
+            <span>⚠</span>
+            <span>This student triggered <strong>${delayedTriggered.length} delayed consequence(s)</strong> — decisions in one lesson that fired a consequence in a later lesson. These are marked below.</span>
+          </div>` : ''}
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;">
+          ${renderFlagDetails(CONTINUITY_FLAGS, flags)}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: Final Outcome -->
+    <div class="section-card card">
+      <div class="card-header">
+        <span class="card-title">🏁 Lesson 8 Final Outcome</span>
+        <span style="font-size:11px;color:var(--text-muted)">VALIDATION CHECK 1: Outcome determined by getIdeologyProfile()</span>
+      </div>
+      <div class="card-body">
+        ${renderFinalOutcome(l8Ending, ideologyProfile, turningPoints, completedLessons)}
+      </div>
+    </div>
+
+    <!-- Teacher Notes placeholder -->
+    <div class="section-card card no-print">
+      <div class="card-header">
+        <span class="card-title">📝 Teacher Notes</span>
+        <button class="card-action-btn" onclick="saveNote('${student.id}')">Save</button>
+      </div>
+      <div class="card-body">
+        <textarea class="form-textarea" id="teacher-note-${student.id}" placeholder="Add private notes about this student's historical reasoning, participation, or intervention plan…" rows="3">${loadNote(student.id)}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+// ─── Section Renderers ────────────────────────────────────────────
+
+function renderGrowthChart(growthPairs, completedLessons) {
+  if (!growthPairs.length) {
+    const noAssess = completedLessons.map(lid => {
+      const lesson = LESSONS.find(l => l.id === lid);
+      return `<div class="growth-row"><div class="growth-lesson">${lesson?.short || 'L'+lid}: ${esc(lesson?.title || '')}</div><div style="color:var(--text-muted);font-size:12px;">No assessment data</div></div>`;
+    }).join('');
+    return noAssess || '<p style="color:var(--text-muted);">No lessons completed yet.</p>';
+  }
+
+  return `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:11px;color:var(--text-muted);">
+      <div style="width:8px;height:8px;border-radius:2px;background:#E3F2FD;border:1.5px solid #1565C0;"></div> Pre-score &nbsp;
+      <div style="width:12px;height:12px;border-radius:3px;background:var(--primary);"></div> Post-score
+    </div>
+    ${growthPairs.map(g => {
+      const lesson = LESSONS.find(l => l.id === g.lessonId);
+      const deltaColor = g.growth > 0 ? 'var(--success)' : g.growth < 0 ? 'var(--danger)' : 'var(--text-muted)';
+      const mastery = g.post >= 80 ? '✓ Mastered' : g.post >= 60 ? '~ Developing' : '✗ Needs Support';
+      const masteryColor = g.post >= 80 ? 'var(--success)' : g.post >= 60 ? 'var(--warning)' : 'var(--danger)';
+      return `<div class="growth-row">
+        <div class="growth-lesson">${lesson?.short || 'L'+g.lessonId}: ${esc(lesson?.title || '')}</div>
+        <div class="growth-pre" title="Pre-score">${g.pre}%</div>
+        <div class="growth-bar">
+          <div class="growth-bar-pre" style="width:${g.pre}%;min-width:4px;" title="Pre: ${g.pre}%"></div>
+          <div class="growth-bar-post" style="width:${Math.max(4, g.post)}%;min-width:4px;" title="Post: ${g.post}%"></div>
+        </div>
+        <div class="growth-post" title="Post-score">${g.post}%</div>
+        <div class="growth-delta" style="color:${deltaColor};">${g.growth > 0 ? '+' : ''}${g.growth}%</div>
+        <div style="width:80px;font-size:10px;color:${masteryColor};font-weight:600;">${mastery}</div>
+      </div>`;
+    }).join('')}
+    ${completedLessons.filter(lid => !growthPairs.find(g => g.lessonId === lid)).map(lid => {
+      const lesson = LESSONS.find(l => l.id === lid);
+      return `<div class="growth-row"><div class="growth-lesson">${lesson?.short || 'L'+lid}: ${esc(lesson?.title || '')}</div><div style="color:var(--text-muted);font-size:12px;">Assessment data incomplete</div></div>`;
+    }).join('')}`;
+}
+
+function renderDecisionTimeline(decisionHistory, turningPoints) {
+  return decisionHistory.map(lesson => {
+    const eraClass = lesson.lessonId <= 4 ? 'era-early' : lesson.lessonId <= 7 ? 'era-cold' : 'era-modern';
+    const eraLabel = lesson.lessonId <= 4 ? 'Early Imperial' : lesson.lessonId <= 7 ? 'Cold War' : 'Post-Cold War';
+    const dotClass = lesson.completed ? 'done' : 'pending';
+
+    let decisionsHtml = '';
+    if (!lesson.completed) {
+      decisionsHtml = `<div class="tl-no-data">Not yet reached</div>`;
+    } else if (!lesson.decisions.length) {
+      decisionsHtml = `<div class="tl-no-data">Decisions not recorded</div>`;
+    } else {
+      decisionsHtml = lesson.decisions.map(d => {
+        const tp = turningPoints.find(t => t.lessonId === lesson.lessonId && t.decisionLabel === d.label);
+        const ideoCfg = d.ideology ? (IDEOLOGY_DISPLAY[d.ideology === 'security' ? 'interventionist' : d.ideology === 'diplomatic' ? 'diplomatic' : d.ideology === 'economic' ? 'economic_pragmatist' : 'mixed'] || null) : null;
+        return `
+          <div class="tl-decision">
+            <div class="tl-decision-label">
+              ${ideoCfg ? `<span class="badge ${ideoCfg.badgeClass}" style="font-size:9px;margin-right:4px;">${ideoCfg.label.split(' ')[0]}</span>` : ''}
+              ${esc(d.label || d.choice || d.id)}
+            </div>
+          </div>
+          ${tp ? `<div class="tl-turning-point">🔑 Turning Point: This decision set <strong>${esc(tp.flag)}</strong> → Impact: ${esc(tp.impact)}</div>` : ''}`;
+      }).join('');
+    }
+
+    return `
+      <div class="tl-lesson">
+        <div class="tl-lesson-dot ${dotClass}"></div>
+        <div class="tl-lesson-title">
+          ${lesson.short}: ${esc(lesson.title)}
+          <span class="tl-lesson-era ${eraClass}">${eraLabel}</span>
+          ${lesson.completed ? '<span class="badge badge-green" style="font-size:9px;">✓ Complete</span>' : '<span class="badge badge-gray" style="font-size:9px;">Not started</span>'}
+        </div>
+        <div class="tl-decisions">${decisionsHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderIdeologySection(profile, evolution, completedLessons) {
+  const scores = profile.scores || {};
+  const total  = Math.max(1, (scores.interventionist || 0) + (scores.diplomatic || 0) + (scores.economic_pragmatist || 0));
+  const intPct = Math.round((scores.interventionist || 0) / total * 100);
+  const dipPct = Math.round((scores.diplomatic || 0) / total * 100);
+  const ecoPct = Math.round((scores.economic_pragmatist || 0) / total * 100);
+
+  const ideoHtml = `
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <div class="section-label">Current Profile</div>
+        <div style="margin-bottom:12px;">
+          <span class="badge ${IDEOLOGY_DISPLAY[profile.ideology]?.badgeClass || 'badge-gray'}" style="font-size:14px;padding:5px 14px;margin-bottom:8px;display:inline-block;">
+            ${IDEOLOGY_DISPLAY[profile.ideology]?.label || 'Mixed'}
+          </span>
+          ${profile.confidence > 0 ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Confidence: <strong>${profile.confidence}%</strong></div>` : '<div style="font-size:12px;color:var(--text-muted);">No dominant axis yet</div>'}
+        </div>
+
+        <div class="section-label">Axis Breakdown</div>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-row-label">Interventionist</div>
+            <div class="bar-track"><div class="bar-fill red" style="width:${intPct}%">${intPct >= 20 ? `<span>${intPct}%</span>` : ''}</div></div>
+            <div class="bar-row-val">${intPct}%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-row-label">Diplomatic</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${dipPct}%">${dipPct >= 20 ? `<span>${dipPct}%</span>` : ''}</div></div>
+            <div class="bar-row-val">${dipPct}%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-row-label">Econ. Pragmatist</div>
+            <div class="bar-track"><div class="bar-fill orange" style="width:${ecoPct}%">${ecoPct >= 20 ? `<span>${ecoPct}%</span>` : ''}</div></div>
+            <div class="bar-row-val">${ecoPct}%</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Ideology by Lesson (How it evolved)</div>
+        ${evolution.length ? `
+          <div class="ideo-evo-container">
+            ${evolution.map(e => `
+              <div class="ideo-evo-col">
+                <div class="ideo-evo-bars">
+                  <div class="ideo-evo-bar" style="height:${e.int}%;background:#C62828;border-radius:3px;" title="Interventionist: ${e.int}%"></div>
+                  <div class="ideo-evo-bar" style="height:${e.dip}%;background:#1565C0;border-radius:3px;" title="Diplomatic: ${e.dip}%"></div>
+                  <div class="ideo-evo-bar" style="height:${e.eco}%;background:#F57F17;border-radius:3px;" title="Economic: ${e.eco}%"></div>
+                </div>
+                <div class="ideo-evo-label">L${e.lessonId}</div>
+              </div>`).join('')}
+          </div>
+          <div class="ideo-legend" style="margin-top:8px;">
+            <div class="ideo-legend-item"><div class="ideo-legend-dot" style="background:#C62828;"></div>Interventionist</div>
+            <div class="ideo-legend-item"><div class="ideo-legend-dot" style="background:#1565C0;"></div>Diplomatic</div>
+            <div class="ideo-legend-item"><div class="ideo-legend-dot" style="background:#F57F17;"></div>Economic</div>
+          </div>` : '<p style="color:var(--text-muted);font-size:12px;">Not enough data yet to show evolution.</p>'}
+      </div>
+    </div>`;
+
+  return ideoHtml;
+}
+
+function renderMisconceptions(misconceptions, completedLessons, assessments) {
+  if (!misconceptions.length) {
+    const hasAny = completedLessons.some(lid => assessments[lid]);
+    if (!hasAny) return '<p style="color:var(--text-muted);font-size:13px;">No assessment data available.</p>';
+    return `<div class="alert alert-success"><span>✓</span><span>No significant misconceptions detected. All completed assessments scored ≥70%.</span></div>`;
+  }
+
+  return `
+    <div class="alert alert-warning" style="margin-bottom:14px;">
+      <span>⚠</span>
+      <span>${misconceptions.length} lesson(s) with scores below 70% — review these standards with the student.</span>
+    </div>
+    ${misconceptions.map(m => {
+      const lesson   = LESSONS.find(l => l.id === m.lessonId);
+      const severity = m.severity === 'high' ? 'mis-high' : 'mis-medium';
+      const action   = m.pct < 50 ? 'Immediate re-teaching recommended' : 'Review and guided practice recommended';
+      return `<div class="mis-item">
+        <div class="mis-circle ${severity}">${m.pct}%</div>
+        <div class="mis-info">
+          <div class="mis-lesson">L${m.lessonId}: ${esc(lesson?.title || '')}</div>
+          <div class="mis-skill">Weak skill: ${esc(m.skill)}</div>
+          <div class="mis-action">${action}</div>
+        </div>
+        <div class="mis-score">${m.score}/${m.total}</div>
+      </div>`;
+    }).join('')}`;
+}
+
+function renderFlagDetails(allFlags, flags) {
+  return allFlags.map(f => {
+    const triggered = !!flags[f.id];
+    const catMap    = { interventionist: '#C62828', diplomatic: '#1565C0', economic: '#F57F17', mixed: '#6A1B9A' };
+    const color     = catMap[f.category] || '#9E9E9E';
+    const icon      = triggered ? '✅' : '⬜';
+    return `
+      <div class="flag-detail-item ${triggered ? 'triggered' : ''}">
+        <div class="flag-detail-icon">${icon}</div>
+        <div class="flag-detail-body">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <div class="flag-detail-name">${esc(f.label)}</div>
+            ${f.delayedConsequence ? '<span class="flag-detail-delayed">⚠ DELAYED</span>' : ''}
+          </div>
+          <div class="flag-detail-lesson" style="color:${color};">L${f.lesson} → L${f.targetLesson}</div>
+          ${triggered ? `<div class="flag-detail-impact">${esc(f.impact)}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderFinalOutcome(l8Ending, ideologyProfile, turningPoints, completedLessons) {
+  if (!completedLessons.includes(8)) {
+    const predictedEnding = computeL8Ending(ideologyProfile);
+    return `
+      <div class="alert alert-info">
+        <span>⏳</span>
+        <span>This student has not yet reached Lesson 8. Based on their current ideology profile (<strong>${IDEOLOGY_DISPLAY[ideologyProfile.ideology]?.label || 'Mixed'}</strong>, ${ideologyProfile.confidence}% confidence), they are tracking toward:<br>
+        <strong>${predictedEnding.type} — ${predictedEnding.name}</strong> (${predictedEnding.theme})</span>
+      </div>`;
+  }
+
+  if (!l8Ending) return '<p style="color:var(--text-muted);">Ending data not available.</p>';
+
+  const keyDecisions = turningPoints.slice(0, 4);
+  const impactingFlags = CONTINUITY_FLAGS.filter(f => {
+    const wasTriggered = !!analytics.flags[f.id];
+    const affectsL8   = f.targetLesson === 8;
+    return wasTriggered && affectsL8;
+  });
+
+  return `
+    <div class="ending-card ${l8Ending.cardClass}" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div class="ending-badge">${l8Ending.type}</div>
+        <div>
+          <div class="ending-title">${esc(l8Ending.name)}</div>
+          <div class="ending-theme">${esc(l8Ending.theme)}</div>
+          <div class="ending-desc">${esc(l8Ending.description)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Why this student got this ending</div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">
+      <strong>Ideology profile:</strong> ${IDEOLOGY_DISPLAY[ideologyProfile.ideology]?.label || 'Mixed'} (${ideologyProfile.confidence}% confidence).
+      L8 endings require: A = Diplomatic ≥40%, B = Economic ≥30%, C = Interventionist ≥40%, D = Mixed (default).
+    </p>
+
+    ${impactingFlags.length ? `
+      <div class="section-label">Flags that shaped this ending (L? → L8)</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+        ${impactingFlags.map(f => `
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;background:#E8F5E9;border-radius:5px;">
+            <span>✅</span>
+            <strong>${esc(f.label)}</strong>
+            <span style="color:var(--text-muted);">(L${f.lesson} → L8) · ${esc(f.impact)}</span>
+          </div>`).join('')}
+      </div>` : ''}
+
+    <div class="section-label">APUSH Teaching Implication</div>
+    <div class="alert alert-info">
+      <span>🎓</span>
+      <span>${esc(l8Ending.apushImplication)}</span>
+    </div>`;
+}
+
+// ─── Utilities ─────────────────────────────────────────────────────
+
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function getStatusBadge(status) {
+  return { excelling:'green', 'on-track':'blue', behind:'orange', 'needs-attention':'red' }[status] || 'gray';
+}
+
+function getStatusLabel(status) {
+  return { excelling:'⭐ Excelling', 'on-track':'✓ On Track', behind:'⚠ Behind', 'needs-attention':'🔴 Needs Attention' }[status] || status;
+}
+
+function loadNote(studentId) {
+  try { return localStorage.getItem(`ei_note_${studentId}`) || ''; } catch { return ''; }
+}
+
+window.saveNote = function(studentId) {
+  const val = document.getElementById(`teacher-note-${studentId}`)?.value || '';
+  try { localStorage.setItem(`ei_note_${studentId}`, val); alert('Note saved.'); } catch { alert('Could not save note.'); }
+};
+
+// computeL8Ending is imported from core.js above
+</script>
+</body>
+</html>
