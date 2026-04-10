@@ -235,9 +235,11 @@ export function createAdvisorSelectCard({ name, role, portraitSrc, selected = fa
   el.setAttribute('aria-pressed', selected.toString());
   el.dataset.role = role;
 
-  const imgHtml = portraitSrc
-    ? `<img class="advisor-select-card__portrait" src="${portraitSrc}" alt="Portrait of ${name}" onerror="this.outerHTML='<div class=\\'asset-placeholder asset-placeholder--portrait\\'><div>Portrait</div></div>'">`
-    : `<div class="asset-placeholder asset-placeholder--portrait"><div>Portrait</div></div>`;
+  const imgHtml = `<div class="advisor-select-card__portrait-wrap">${
+    portraitSrc
+      ? `<img class="advisor-select-card__portrait" src="${portraitSrc}" alt="Portrait of ${name}" onerror="this.outerHTML='<div class=\\'asset-placeholder asset-placeholder--portrait\\'><div>Portrait</div></div>'">`
+      : `<div class="asset-placeholder asset-placeholder--portrait" style="width:100%;height:100%;"><div>Portrait</div></div>`
+  }</div>`;
 
   el.innerHTML = `
     ${imgHtml}
