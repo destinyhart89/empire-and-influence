@@ -96,6 +96,69 @@ const lesson01 = {
   },
 
   // ═══════════════════════════════════════════════════════
+  // TRIGGERED EVENTS — fire after decisions based on conditions
+  // ═══════════════════════════════════════════════════════
+
+  triggeredEvents: [
+    {
+      id: 'yellow_journalism_frenzy',
+      trigger: (state) => state.decisions?.some(d => d.choiceId === 'd1_war'),
+      title: 'Yellow Press Frenzy',
+      desc: 'Hearst and Pulitzer seize on the war declaration — headlines scream with patriotic fervor.',
+      effects: { stability: -3, support: -2 },
+      asset: 'EVT_YellowJournalism.png',
+    },
+    {
+      id: 'economic_panic',
+      trigger: (state) => state.decisions?.some(d => d.choiceId === 'd1_economic'),
+      title: 'Wall Street Reacts',
+      desc: 'Markets stabilize around American naval presence, but critics warn of corporate entanglement.',
+      effects: { economic: +3, support: -2 },
+      asset: 'EVT_BusinessInterests.png',
+    },
+    {
+      id: 'marine_incident',
+      trigger: (state) => state.decisions?.some(d => d.choiceId === 'd2_occupy'),
+      title: 'U.S. Marine Killed at Checkpoint',
+      desc: 'Tensions escalate as violence spills into direct conflict during occupation.',
+      effects: { stability: -5, support: -3 },
+      asset: 'EVT_MilitaryIntervention.png',
+    },
+    {
+      id: 'european_criticism',
+      trigger: (state) => (state.metrics?.support ?? 50) < 35,
+      title: 'European Powers Condemn U.S.',
+      desc: 'Britain and France issue joint statement questioning American motives in the Caribbean.',
+      effects: { support: -4 },
+      asset: 'EVT_DiplomaticMission.png',
+    },
+    {
+      id: 'sugar_baron_pressure',
+      trigger: (state) => (state.metrics?.economic ?? 50) >= 65,
+      title: 'Sugar Barons Demand More Access',
+      desc: 'American corporations lobby Washington for exclusive Cuban trade concessions.',
+      effects: { economic: +3, stability: -2 },
+      asset: 'EVT_BusinessInterests.png',
+    },
+    {
+      id: 'cuban_protest',
+      trigger: (state) => state.decisions?.some(d => d.choiceId === 'd2_occupy') && state.decisions?.some(d => d.choiceId === 'd3_expand'),
+      title: 'Cuban Nationalist Uprising',
+      desc: 'Occupation combined with expansionist rhetoric provokes mass protests across the island.',
+      effects: { stability: -8, support: -5 },
+      asset: 'EVT_NativeUnrest.png',
+    },
+    {
+      id: 'latin_backlash',
+      trigger: (state) => (state.metrics?.support ?? 50) < 25,
+      title: 'Latin American Backlash',
+      desc: 'Regional governments condemn U.S. interference and recall ambassadors.',
+      effects: { stability: -4 },
+      asset: 'EVT_PoliticalCrisis.png',
+    },
+  ],
+
+  // ═══════════════════════════════════════════════════════
   // SCREENS
   // ═══════════════════════════════════════════════════════
 

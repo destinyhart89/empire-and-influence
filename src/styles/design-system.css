@@ -437,13 +437,23 @@
   box-shadow: 0 0 16px rgba(201, 168, 76, 0.2);
 }
 
-.advisor-select-card__portrait {
-  width: 100px;
-  height: 130px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid rgba(201, 168, 76, 0.15);
+.advisor-select-card__portrait-wrap {
+  width: 120px;
+  height: 160px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  background: var(--ds-mid);
   margin-bottom: 0.625rem;
+}
+
+.advisor-select-card__portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
 }
 
 .advisor-select-card__name {
@@ -486,21 +496,26 @@
   background: rgba(201, 168, 76, 0.06);
 }
 
-.advisor-dock__item--active {
-  background: var(--ds-gold-ghost);
+.advisor-dock__thumb-wrap {
+  width: 40px;
+  height: 52px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background: var(--ds-mid);
+  flex-shrink: 0;
+  transition: all 0.25s ease;
 }
 
 .advisor-dock__thumb {
-  width: 36px;
-  height: 36px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid transparent;
+  object-position: center top;
+  display: block;
 }
 
-.advisor-dock__item--active .advisor-dock__thumb {
-  border-color: var(--ds-gold);
-}
 
 .advisor-dock__name {
   font-size: 0.75rem;
@@ -523,13 +538,23 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-.advisor-dialogue__portrait {
+.advisor-dialogue__portrait-wrap {
   width: 64px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid var(--ds-gold-border);
+  height: 84px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  background: var(--ds-mid);
   flex-shrink: 0;
+}
+
+.advisor-dialogue__portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
 }
 
 .advisor-dialogue__content {
@@ -594,6 +619,98 @@
 
 .advisor-reaction__icon {
   font-size: 0.875rem;
+}
+
+/* — Advisor State System (highlight/dim on decision) — */
+.advisor-dock__item--dimmed {
+  opacity: 0.35;
+  filter: grayscale(0.6);
+}
+
+.advisor-dock__item--active {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.03);
+  background: var(--ds-gold-ghost);
+}
+
+.advisor-dock__item--active .advisor-dock__thumb-wrap {
+  border-color: var(--ds-gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.2);
+}
+
+.advisor-dock__item--reacted-positive .advisor-dock__thumb-wrap {
+  border-color: var(--ds-success);
+  box-shadow: 0 0 8px rgba(78, 166, 92, 0.25);
+}
+
+.advisor-dock__item--reacted-negative .advisor-dock__thumb-wrap {
+  border-color: var(--ds-danger);
+  box-shadow: 0 0 8px rgba(212, 90, 74, 0.25);
+}
+
+.advisor-dock__role-label {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  opacity: 0.7;
+  margin-top: 1px;
+}
+
+.advisor-dock__role-label--economic { color: var(--ds-role-economic); }
+.advisor-dock__role-label--security { color: var(--ds-role-security); }
+.advisor-dock__role-label--diplomatic { color: var(--ds-role-diplomatic); }
+
+/* — Triggered Event Cards (sidebar) — */
+.triggered-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.triggered-event-card {
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  background: linear-gradient(180deg, rgba(201, 168, 76, 0.08), rgba(255, 255, 255, 0.02));
+  padding: 0.625rem;
+  border-radius: var(--ds-card-radius);
+  animation: eventSlideIn 0.4s var(--ease-out-expo);
+}
+
+.triggered-event-card__title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--ds-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 0.25rem;
+}
+
+.triggered-event-card__desc {
+  font-size: 0.75rem;
+  color: var(--ds-text-dim);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.triggered-event-card__effects {
+  margin-top: 0.375rem;
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  font-size: 0.625rem;
+}
+
+.triggered-event-card__tag {
+  padding: 2px 5px;
+  border: 1px solid var(--ds-gold-border);
+  background: rgba(255, 255, 255, 0.025);
+  border-radius: 3px;
+}
+
+@keyframes eventSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ═══════════════════════════════════════════════════════════

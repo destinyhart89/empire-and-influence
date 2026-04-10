@@ -18,7 +18,7 @@ import { loadGameState, loadGlobalState, saveGlobalState, initSession, updateGlo
 import { METER_KEYS, METER_LABELS } from '../engine/metrics-system.js';
 import { getTrustLevel } from '../engine/advisor-system.js';
 import { getDominantIdeology, getIdeologyBreakdown } from '../engine/ideology-tracker.js';
-import { resolveAssetPath, resolvePortraitPath, resolveMapPath, resolveNewspaperPath, preloadLessonAssets } from '../core/asset-loader.js';
+import { resolveAssetPath, resolvePortraitPath, resolveMapPath, resolveNewspaperPath, resolveSharedEventPath, preloadLessonAssets } from '../core/asset-loader.js';
 
 import {
   renderAppShell,
@@ -537,6 +537,16 @@ export class GameRenderer {
     this._renderSidebarMeters();
     this._renderSidebarAdvisors();
 
+    // Update advisor state (highlight dominant, dim others, show reaction)
+    if (result.advisorAlignment) {
+      const netDelta = Object.values(result.metricDeltas || {}).reduce((sum, v) => sum + v, 0);
+      const reaction = netDelta > 0 ? 'positive' : netDelta < 0 ? 'negative' : null;
+      this._updateAdvisorState(result.advisorAlignment, reaction);
+    }
+
+    // Run triggered events
+    this._runTriggeredEvents();
+
     this.viewport.scrollTop = 0;
   }
 
@@ -1013,6 +1023,8 @@ export class GameRenderer {
 
     this.advisorDockContainer.innerHTML = '';
 
+    const roleLabels = { economic: 'Industrialist', security: 'Military', diplomatic: 'Diplomat' };
+
     for (const [role, data] of Object.entries(lessonAdvisors)) {
       const trust = gameState.advisors[role]?.trust ?? 0;
       const trustLevel = getTrustLevel(trust);
@@ -1020,17 +1032,131 @@ export class GameRenderer {
 
       const item = document.createElement('div');
       item.className = 'advisor-dock__item';
-      item.style.cssText = 'display:flex; align-items:center; gap:0.5rem; padding:0.25rem 0;';
+      item.dataset.role = role;
+      item.style.cssText = 'display:flex; align-items:center; gap:0.5rem; padding:0.375rem 0; transition:all 0.25s ease;';
       item.innerHTML = `
-        <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0; border:2px solid var(--ds-border);">
-          <img src="${portraitSrc}" alt="${data.name}" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'">
+        <div class="advisor-dock__thumb-wrap">
+          <img class="advisor-dock__thumb" src="${portraitSrc}" alt="${data.name}" onerror="this.style.display='none'">
         </div>
         <div style="flex:1; min-width:0;">
           <div style="font-size:0.75rem; font-weight:600; color:var(--ds-text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${data.name}</div>
-          <div style="font-size:0.625rem; color:var(--ds-text-muted); text-transform:capitalize;">${trustLevel} (${trust > 0 ? '+' : ''}${trust})</div>
+          <div class="advisor-dock__role-label advisor-dock__role-label--${role}">${roleLabels[role] || role}</div>
+          <div style="font-size:0.5625rem; color:var(--ds-text-muted); text-transform:capitalize;">${trustLevel} (${trust > 0 ? '+' : ''}${trust})</div>
         </div>
       `;
       this.advisorDockContainer.appendChild(item);
+    }
+  }
+
+  /**
+   * Update advisor state in sidebar — highlight dominant, dim others, show reaction.
+   * @param {string} dominantRole - 'economic', 'security', or 'diplomatic'
+   * @param {string|null} reaction - 'positive', 'negative', or null
+   */
+  _updateAdvisorState(dominantRole, reaction = null) {
+    if (!this.advisorDockContainer) return;
+
+    this.advisorDockContainer.querySelectorAll('.advisor-dock__item').forEach(item => {
+      item.classList.remove(
+        'advisor-dock__item--active',
+        'advisor-dock__item--dimmed',
+        'advisor-dock__item--reacted-positive',
+        'advisor-dock__item--reacted-negative'
+      );
+
+      if (item.dataset.role === dominantRole) {
+        item.classList.add('advisor-dock__item--active');
+        if (reaction === 'positive') item.classList.add('advisor-dock__item--reacted-positive');
+        if (reaction === 'negative') item.classList.add('advisor-dock__item--reacted-negative');
+      } else {
+        item.classList.add('advisor-dock__item--dimmed');
+      }
+    });
+  }
+
+  /**
+   * Run triggered events — check lesson's triggeredEvents array against current state.
+   * Fires each event only once, applies effects, and shows card in sidebar.
+   */
+  _runTriggeredEvents() {
+    if (!this.flow || !this.lessonData?.triggeredEvents) return;
+
+    const gameState = this.flow.getState();
+    if (!gameState) return;
+
+    // Initialize fired events tracking
+    if (!gameState._firedEvents) gameState._firedEvents = {};
+
+    const container = this.sidebarEl?.querySelector('#sidebar-triggered-events');
+    const section = this.sidebarEl?.querySelector('#sidebar-events-section');
+
+    for (const evt of this.lessonData.triggeredEvents) {
+      if (gameState._firedEvents[evt.id]) continue;
+
+      let triggered = false;
+      try {
+        triggered = evt.trigger(gameState);
+      } catch (e) {
+        console.warn(`[GameRenderer] Event trigger error for ${evt.id}:`, e);
+      }
+
+      if (!triggered) continue;
+
+      // Mark as fired
+      gameState._firedEvents[evt.id] = true;
+
+      // Apply effects to metrics
+      if (evt.effects) {
+        for (const [key, val] of Object.entries(evt.effects)) {
+          if (gameState.metrics[key] != null) {
+            gameState.metrics[key] = Math.max(0, Math.min(100, gameState.metrics[key] + val));
+          }
+        }
+        this._renderSidebarMeters();
+      }
+
+      // Show event card in sidebar
+      if (container && section) {
+        section.style.display = '';
+        const card = document.createElement('div');
+        card.className = 'triggered-event-card';
+
+        const effectsHtml = evt.effects
+          ? Object.entries(evt.effects).map(([k, v]) => {
+              const label = METER_LABELS[k] || k;
+              const cls = v >= 0 ? 'good' : 'bad';
+              const sign = v >= 0 ? '+' : '';
+              return `<span class="triggered-event-card__tag"><span style="color:var(--ds-${v >= 0 ? 'success' : 'danger'})">${label}: ${sign}${v}</span></span>`;
+            }).join('')
+          : '';
+
+        card.innerHTML = `
+          <div class="triggered-event-card__title">\u26A1 ${evt.title}</div>
+          <div class="triggered-event-card__desc">${evt.desc}</div>
+          ${effectsHtml ? `<div class="triggered-event-card__effects">${effectsHtml}</div>` : ''}
+        `;
+        container.appendChild(card);
+      }
+
+      // Show popup via existing showEventPopup
+      const effects = evt.effects
+        ? Object.entries(evt.effects).map(([k, v]) => ({ label: METER_LABELS[k] || k, value: v }))
+        : [];
+
+      const eventIconSrc = evt.asset
+        ? resolveSharedEventPath(evt.asset)
+        : null;
+
+      showEventPopup({
+        iconSrc: eventIconSrc,
+        title: evt.title,
+        text: evt.desc,
+        effects,
+        onContinue: () => {},
+      });
+
+      // Only show one event at a time to not overwhelm
+      break;
     }
   }
 

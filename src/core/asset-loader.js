@@ -87,6 +87,16 @@ export function resolveNewspaperPath(lessonId, newspaperFilename) {
   return resolveAssetPath(lessonId, ASSET_TYPES.NEWSPAPER, newspaperFilename);
 }
 
+/**
+ * Resolve a shared event card asset path.
+ * All event cards live under Assets_Organized/shared/events/ with EVT_ prefix.
+ * @param {string} evtFilename - e.g. 'EVT_YellowJournalism.png'
+ * @returns {string}
+ */
+export function resolveSharedEventPath(evtFilename) {
+  return `${ASSET_BASE}/shared/events/${evtFilename}`;
+}
+
 // ─── Asset Cache ────────────────────────────────────────────
 
 const assetCache = new Map();

@@ -62,6 +62,13 @@ export function buildLessonSidebar({ steps = [], currentStepId, completedStepIds
       </div>
     </div>
 
+    <div class="sidebar__section" id="sidebar-events-section" style="display:none;">
+      <div class="sidebar__heading">Triggered Events</div>
+      <div class="triggered-events" id="sidebar-triggered-events">
+        <!-- Triggered event cards injected here -->
+      </div>
+    </div>
+
     <div class="sidebar__section" style="margin-top:auto;">
       <div class="sidebar__heading">Resources</div>
       <div id="sidebar-meters">

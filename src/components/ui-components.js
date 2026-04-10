@@ -262,8 +262,8 @@ export function createAdvisorDialogue({ name, role, portraitSrc, text, reaction 
   el.setAttribute('aria-live', 'polite');
 
   const imgHtml = portraitSrc
-    ? `<img class="advisor-dialogue__portrait" src="${portraitSrc}" alt="${name}" onerror="this.outerHTML='<div class=\\'asset-placeholder asset-placeholder--portrait\\'></div>'">`
-    : `<div class="asset-placeholder asset-placeholder--portrait" style="width:64px;height:80px;"></div>`;
+    ? `<div class="advisor-dialogue__portrait-wrap"><img class="advisor-dialogue__portrait" src="${portraitSrc}" alt="${name}" onerror="this.outerHTML='<div class=\\'asset-placeholder asset-placeholder--portrait\\'></div>'"></div>`
+    : `<div class="advisor-dialogue__portrait-wrap"><div class="asset-placeholder asset-placeholder--portrait" style="width:100%;height:100%;"></div></div>`;
 
   const reactionHtml = reaction ? createReactionBadgeHtml(reaction) : '';
 
@@ -299,10 +299,12 @@ export function createAdvisorDock(advisors = [], activeRole = null) {
 
   el.innerHTML = advisors.map(a => `
     <div class="advisor-dock__item ${a.role === activeRole ? 'advisor-dock__item--active' : ''}" data-role="${a.role}" role="button" tabindex="0">
-      ${a.portraitSrc
-        ? `<img class="advisor-dock__thumb" src="${a.portraitSrc}" alt="${a.name}" onerror="this.style.display='none'">`
-        : `<div class="advisor-dock__thumb" style="background:var(--ds-light);"></div>`
-      }
+      <div class="advisor-dock__thumb-wrap">
+        ${a.portraitSrc
+          ? `<img class="advisor-dock__thumb" src="${a.portraitSrc}" alt="${a.name}" onerror="this.style.display='none'">`
+          : `<div class="advisor-dock__thumb" style="background:var(--ds-light);"></div>`
+        }
+      </div>
       <span class="advisor-dock__name">${a.name}</span>
     </div>
   `).join('');
